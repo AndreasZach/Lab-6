@@ -24,6 +24,10 @@ namespace Lab6
         {
             InitializeComponent();
 
+            // TODO: Add the rest of the methods/data needed by Agents.
+            // TODO: Find a good way to implement it all Asynchronously
+            // TODO: Add ways to change the total amount of glasses/chairs from the MainWindow.xaml
+            // TODO: Add ways to change Agent individual action speed from the MainWindow.xaml
         }
     }
 }
