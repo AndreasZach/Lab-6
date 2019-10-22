@@ -15,6 +15,6 @@ namespace Lab6.Agents
 
         Bartender bartender = new Bartender();
         Bouncer bouncer = new Bouncer();
-        Waitress waitress = new Waitress();
+        Waiter waitress = new Waiter();
     }
 }

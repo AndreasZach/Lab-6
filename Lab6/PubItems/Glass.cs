@@ -8,7 +8,7 @@ namespace Lab6
 {
     class Glass : PubItem
     {
-        public bool IsDirty { get; private set; } = false;
+
 
         public override void PatronUsing()
         {
