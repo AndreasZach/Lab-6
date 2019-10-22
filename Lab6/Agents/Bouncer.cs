@@ -8,5 +8,6 @@ namespace Lab6.Agents
 {
     class Bouncer : Agent
     {
+        public List<string> patronNames;
     }
 }

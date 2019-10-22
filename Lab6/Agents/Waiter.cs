@@ -12,6 +12,7 @@ namespace Lab6.Agents
 
         public void GatherDirtyGlasses(List<Glass> dirtyGlasses)
         {
+            //Check for dirtyglasseslist > 0 every 1/10 second
             foreach (var dirtyGlass in dirtyGlasses)
             {
                 dirtyGlassesCarried.Add(dirtyGlass);
