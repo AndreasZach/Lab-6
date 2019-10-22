@@ -59,7 +59,7 @@
     <Compile Include="Agents\Bartender.cs" />
     <Compile Include="Agents\Bouncer.cs" />
     <Compile Include="Agents\Patron.cs" />
-    <Compile Include="Agents\Waitress.cs" />
+    <Compile Include="Agents\Waiter.cs" />
     <Compile Include="PubItems\PubItem.cs" />
     <Compile Include="PubItems\PubItemsState.cs" />
     <Page Include="MainWindow.xaml">

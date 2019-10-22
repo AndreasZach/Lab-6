@@ -14,6 +14,12 @@ namespace Lab6
         List<Glass> cleanGlasses = new List<Glass>();
         List<Glass> dirtyGlasses = new List<Glass>();
 
+        public PubItemsState(int sumAmountChairs, int sumAmountGlasses)
+        {
+            SumAmountChairs = sumAmountChairs;
+            SumAmountGlasses = sumAmountGlasses;
+        }
+
         public int SumAmountChairs { get; set; } = 9;
         public int SumAmountGlasses { get; set; } = 8;
 
