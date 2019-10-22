@@ -8,7 +8,7 @@ namespace Lab6
 {
     abstract class PubItem
     {
-        public bool IsAvailable { get; internal set; } = false;
+        public bool IsAvailable { get; internal set; } = true;
 
         public virtual void PatronUsing()
         {

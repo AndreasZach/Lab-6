@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab6.Agents
 {
-    class Waitress : Agent
+    class Waiter : Agent
     {
         List<Glass> dirtyGlassesCarried = new List<Glass>();
 
@@ -19,12 +19,15 @@ namespace Lab6.Agents
             }
         }
 
-        public void WashDishes()
+        public void WashGlasses()
         {
-            foreach (var glass in dirtyGlassesCarried)
-            {
-                glass.CleanGlass();
-            }
+            // Wash x glasses in r time
+            // Put x glasses on shelf
+
+            //foreach (var glass in dirtyGlassesCarried)
+            //{
+            //    glass.CleanGlass();
+            //}
         }
     }
 }
