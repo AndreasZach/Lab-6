@@ -30,20 +30,5 @@ namespace Lab6
             // TODO: Add ways to change Agent individual action speed from the MainWindow.xaml
             // TODO: Turn off the StartURI, and create a startup event instead, in order to work Object-oriented with the MainWindow.
         }
-
-        private void OpenPauseBarButton_Click(object sender, RoutedEventArgs e)
-        {
-
-            if (true) // Bar is not opened or paused
-            {
-                // Open bar
-                OpenPauseBarButton.Content = "Pause bar";
-            }
-            else
-            {
-                // Pause bar
-                OpenPauseBarButton.Content = "Open bar";
-            }
-        }
     }
 }
