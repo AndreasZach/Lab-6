@@ -12,6 +12,8 @@ namespace Lab6
         //Add random name generator method to fill the List. Need to make it many names, so as to never let it get empty.
         public ConcurrentBag<string> patronNames = new ConcurrentBag<string>(); 
 
+        //TODO: Make it so that thread continues after returning a Patron
+
         public Patron AllowPatronEntry()
         {
             string name;
