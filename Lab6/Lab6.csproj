@@ -63,6 +63,8 @@
     <Compile Include="Pub.cs" />
     <Compile Include="PubItems\PubItem.cs" />
     <Compile Include="PubManager.cs" />
+    <Compile Include="RandomIntGenerator.cs" />
+    <Compile Include="Time.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
