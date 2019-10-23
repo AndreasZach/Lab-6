@@ -16,7 +16,7 @@ namespace Lab6
             
         }
 
-        public void WashGlasses()
+        public void CleanAndStoreGlasses()
         {
             
         }
