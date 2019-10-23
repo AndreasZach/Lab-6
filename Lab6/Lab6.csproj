@@ -55,13 +55,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Agents\AgentsState.cs" />
     <Compile Include="Agents\Bartender.cs" />
     <Compile Include="Agents\Bouncer.cs" />
     <Compile Include="Agents\Patron.cs" />
     <Compile Include="Agents\Waiter.cs" />
+    <Compile Include="DebugStateMachine.cs" />
+    <Compile Include="Pub.cs" />
     <Compile Include="PubItems\PubItem.cs" />
-    <Compile Include="PubItems\PubItemsState.cs" />
+    <Compile Include="PubManager.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

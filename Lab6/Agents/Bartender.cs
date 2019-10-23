@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lab6.Agents
+namespace Lab6
 {
     class Bartender : Agent
     {
+        public Glass CarriedGlass { get; set; }
+
+        public void FetchGlass()
+        {
+            Thread.Sleep(); //Call method for correct time.
+        }
+
         public void ServeBeer()
         {
-            //if glass on shelf (check 1/10 second)
-                //take one glass
-                //fill with beer in r time
-                //give to patron
+            Thead.Sleep(); //Call method for correct time.
         }
     }
 }

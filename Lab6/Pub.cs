@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Glass : PubItem
+    class Pub
     {
-        public bool IsDirty { get; set; }
     }
 }

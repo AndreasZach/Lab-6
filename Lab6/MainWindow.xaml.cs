@@ -28,6 +28,7 @@ namespace Lab6
             // TODO: Find a good way to implement it all Asynchronously
             // TODO: Add ways to change the total amount of glasses/chairs from the MainWindow.xaml
             // TODO: Add ways to change Agent individual action speed from the MainWindow.xaml
+            // TODO: Turn off the StartURI, and create a startup event instead, in order to work Object-oriented with the MainWindow.
         }
 
         private void OpenPauseBarButton_Click(object sender, RoutedEventArgs e)
