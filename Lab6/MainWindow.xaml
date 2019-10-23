@@ -19,7 +19,7 @@
             <RowDefinition Height="8*"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        
+
         <Label x:Name="BartenderLabel" 
                Content="Bartender"
                FontSize="20"
@@ -32,7 +32,7 @@
                  Height="90"
                  VerticalAlignment="Bottom"
                  Width="300"/>
-        
+
         <Label x:Name="WaiterLabel"
                Content="Waiter"
                Grid.Row="1"
@@ -47,7 +47,7 @@
                  Height="90"
                  VerticalAlignment="Bottom"
                  Width="300"/>
-        
+
         <Label x:Name="PatronsLabel"
                Content="Patrons"
                Grid.Row="2"
@@ -62,7 +62,7 @@
                  Height="90"
                  VerticalAlignment="Bottom"
                  Width="300"/>
-        
+
         <Button x:Name="PauseBartenderButton"
                 Content="Pause Bartender"
                 Grid.Column="1"
@@ -71,7 +71,7 @@
                 VerticalAlignment="Center" 
                 Width="100"
                 Height="30"/>
-        
+
         <Button x:Name="PauseWaiterButton"
                 Content="Pause Waiter"
                 Grid.Column="1"
@@ -81,7 +81,7 @@
                 VerticalAlignment="Center" 
                 Width="100"
                 Height="30"/>
-        
+
         <Button x:Name="PauseBouncerButton"
                 Content="Pause Bouncer"
                 Grid.Column="1"
@@ -91,13 +91,13 @@
                 VerticalAlignment="Center" 
                 Width="100"
                 Height="30"/>
-        
+
         <Label Content="&quot;Open hours&quot;"
                Grid.Column="2"
                Grid.Row="0"
                FontSize="20"
                HorizontalAlignment="Center"
-               Margin="0,30,0,0"
+               Margin="0,5,0,0"
                VerticalAlignment="Top"/>
         <Label x:Name="CountDownLabel"
                Content="120 s"
@@ -105,11 +105,11 @@
                Grid.Row="0"
                FontSize="20"
                HorizontalAlignment="Center"
-               Margin="0,0,0,30"
-               VerticalAlignment="Bottom"/>
-        
+               Margin="0,0,0,0"
+               VerticalAlignment="Center"/>
+
         <Label x:Name="SpeedLabel"
-               Content="Simulation Speed"
+               Content="Simulation State"
                Grid.Column="2"
                Grid.Row="1"
                FontSize="18"
@@ -123,17 +123,15 @@
                   Margin="0,0,0,0" 
                   VerticalAlignment="Center" 
                   Width="120"/>
-        <Button x:Name="OpenPauseBarButton"
-                Content="Open / Pause bar"
+        <Button x:Name="PauseBarButton"
+                Content="Pause bar"
                 Grid.Column="2"
                 Grid.Row="1"
                 HorizontalAlignment="Center"
                 Margin="0,0,0,5" 
                 VerticalAlignment="Bottom" 
                 Width="140"
-                Height="30"
-                Click="OpenPauseBarButton_Click"/>
-        
+                Height="30"/>
         <Label x:Name="PatronLabel"
                Content="Patrons: " 
                Grid.Column="2"
@@ -158,5 +156,13 @@
                Margin="35,0,0,5"
                Width="150"
                VerticalAlignment="Bottom"/>
+        <Button x:Name="OpenCloseButton"
+            Content="Open Bar"
+            Grid.Column="2"
+            HorizontalAlignment="Center"
+            Margin="0,0,0,5" 
+            VerticalAlignment="Bottom" 
+            Width="140"
+            Height="30" />
     </Grid>
 </Window>
