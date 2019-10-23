@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab6.Agents
 {
-    class AgentsState :
+    class AgentsState
     {
         // Change Lists location to a Pub manager class, that can manage both PubItems and Agents, Asynchronously, at the same time?"
         List<Glass> shelfContainer = new List<Glass>();

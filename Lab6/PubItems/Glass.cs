@@ -8,8 +8,6 @@ namespace Lab6
 {
     class Glass : PubItem
     {
-
-
         public override void PatronUsing()
         {
             IsAvailable = false;
@@ -17,12 +15,11 @@ namespace Lab6
 
         public override void PatronLeaving()
         {
-            IsDirty = true;
+            IsAvailable = true;
         }
 
         public void CleanGlass()
         {
-            IsDirty = false;
             IsAvailable = true;
         }
     }
