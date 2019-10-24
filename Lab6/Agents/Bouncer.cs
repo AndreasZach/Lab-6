@@ -16,26 +16,14 @@ namespace Lab6
         public int maxInterval { get; set; }
 
         //TODO: Make it so that thread continues after returning a Patron
-
-        public void BouncerStart(ConcurrentQueue<Patron> queueToBar)
-        {
-            while (LeftPub == false)
-            {
-                Thread.Sleep((RandomTidMetod(minInterval, maxInterval)) * 1000);
-                string name;
-                patronNames.TryTake(out name);
-                if (name != null)
-                    queueToBar.Enqueue(new Patron(name));
-            }
-        }
-        public void AllowPatronEntry(ConcurrentQueue<Patron> queueToBar)
+        public void AllowPatronEntry(ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
         {
             while (LeftPub != true)
             {
                 string name;
                 patronNames.TryTake(out name);
                 if (name != null)
-                    queueToBar.Enqueue(new Patron(name));
+                    queueToBar.Enqueue(new Patron(name, queueToBar, availableChairs));
                 Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval,maxInterval)) * 1000);
             }
         }
