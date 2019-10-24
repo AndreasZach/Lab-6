@@ -28,14 +28,15 @@ namespace Lab6
                     queueToBar.Enqueue(new Patron(name));
             }
         }
-        public void AllowPatronEntry(ConcurrentQueue<Patron> queueToBar)
+        
+        public void AllowPatronEntry(ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
         {
             while (LeftPub != true)
             {
                 string name;
                 patronNames.TryTake(out name);
                 if (name != null)
-                    queueToBar.Enqueue(new Patron(name));
+                    queueToBar.Enqueue(new Patron(name, queueToBar, availableChairs));
                 Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval,maxInterval)) * 1000);
             }
         }

@@ -10,37 +10,55 @@ namespace Lab6
 {
     class Patron : Agent
     {
-        public string Name { get; set; }
-        public Glass CarriedBeer { get; set; }
-        public Chair ChairUsed { get; set; }
+        private string name;
+        private Glass carriedBeer;
+        private Chair chairUsed;
+        public int minInterval { get; set; }
+        public int maxInterval { get; set; }
 
-        public Patron()
+        public Patron(string name, ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
         {
-
+            this.name = name;
+            GoToBar(queueToBar, availableChairs);
         }
-        public Patron(string name)
+
+        public void GoToBar(ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
         {
             Thread.Sleep(1000);
-            Name = name;
+            queueToBar.Enqueue(this);
+            while (!HasBeer())
+            {
+                HasBeer();
+            }
+            FindChair(availableChairs);
         }
 
-        public void FindChair(ConcurrentBag<Chair> foundChair, Glass recievedBeer)
+        public void FindChair(ConcurrentBag<Chair> foundChair)
         {
-            CarriedBeer = recievedBeer;
             Chair tempChair;
             while(foundChair == null)
             {
                 Thread.Sleep(50);
             }
             foundChair.TryTake(out tempChair);
-            ChairUsed = tempChair;
+            chairUsed = tempChair;
             DrinkBeer();
         }
 
         public void DrinkBeer()
         {
-            Thread.Sleep(1000); //Random time between 10-20
+            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * 1000);
         }
-        //Return both chair and glass via property and Pub class
+
+        public bool HasBeer()
+        {
+            return carriedBeer != null;
+        }
+
+        public void SetBeer(Glass beer)
+        {
+            carriedBeer = beer;
+        }
+
     }
 }

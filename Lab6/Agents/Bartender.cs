@@ -44,7 +44,7 @@ namespace Lab6
         public void ServeBeer()
         {
             Thread.Sleep(3000); //Call method for correct time.
-            currentPatron.CarriedBeer = carriedGlass;
+            currentPatron.SetBeer(carriedGlass);
             carriedGlass = null;
             currentPatron = null;
         }

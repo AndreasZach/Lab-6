@@ -17,15 +17,10 @@ namespace Lab6
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
         public int SumAmountGlasses { get; set; }
         public int SumAmountChairs { get; set; }
-      
-        public Pub()
-        {
-            PubManager manager = new PubManager();
 
-            Bartender bartender = new Bartender();
-            Bouncer bouncer = new Bouncer();
-            Waiter waiter = new Waiter();
-        }
+        Bouncer bouncer = new Bouncer();
+        Bartender bartender = new Bartender();
+        Waiter waiter = new Waiter();
 
         public async void Run()
         {
@@ -34,7 +29,7 @@ namespace Lab6
             Task.Run( () => BartenderProcess() );
         }
 
-        public void BartenderProcess()
+        public async void BartenderProcess()
         {
             //bartender.Work(shelfOfGlasses, queueToBar);
         }
@@ -45,6 +40,11 @@ namespace Lab6
             {
                 //await Task.Run( () => bouncer.AllowPatronEntry(queueToBar) );
             }
+        }
+
+        public async void WaiterProcess()
+        {
+
         }
 
         public void GeneratePubItems()
