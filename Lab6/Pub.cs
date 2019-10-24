@@ -10,11 +10,14 @@ namespace Lab6
     class Pub
     {
         public int NumberOfPatrons { get; set; }
+        bool pubClosing = false;
+        ConcurrentQueue<Glass> shelfOfGlasses =  new ConcurrentQueue<Glass>();
+        ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
-        Queue<Glass> glassesOnShelf = new Queue<Glass>();
-        Stack<Chair> availibleChairs = new Stack<Chair>();
-
+        public int SumAmountGlasses { get; set; }
+        public int SumAmountChairs { get; set; }
+      
         public Pub()
         {
             PubManager manager = new PubManager();
@@ -26,8 +29,34 @@ namespace Lab6
 
         public async void Run()
         {
-            Task.Run(bartender.WaitForPatron);
-            Task.Run(bouncer.AllowPatronEntry);
+            GeneratePubItems();
+            Task.Run( () => BouncerProcess() );
+            Task.Run( () => BartenderProcess() );
+        }
+
+        public void BartenderProcess()
+        {
+            bartender.Work(shelfOfGlasses, queueToBar);
+        }
+
+        public async void BouncerProcess()
+        {
+            while(!pubClosing)
+            {
+                await Task.Run( () => bouncer.AllowPatronEntry(queueToBar) );
+            }
+        }
+
+        public void GeneratePubItems()
+        {
+            for (int i = 0; i < SumAmountGlasses; i++)
+            {
+                shelfOfGlasses.Enqueue(new Glass());
+            }
+            for (int i = 0; i < SumAmountChairs; i++)
+            {
+                availableChairs.Enqueue(new Chair());
+            }
         }
     }
 }

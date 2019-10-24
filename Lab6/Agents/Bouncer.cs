@@ -17,6 +17,17 @@ namespace Lab6
 
         //TODO: Make it so that thread continues after returning a Patron
 
+        public void BouncerStart(ConcurrentQueue<Patron> queueToBar)
+        {
+            while (LeftPub == false)
+            {
+                Thread.Sleep((RandomTidMetod(minInterval, maxInterval)) * 1000);
+                string name;
+                patronNames.TryTake(out name);
+                if (name != null)
+                    queueToBar.Enqueue(new Patron(name));
+            }
+        }
         public void AllowPatronEntry(ConcurrentQueue<Patron> queueToBar)
         {
             while (LeftPub != true)
