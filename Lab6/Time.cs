@@ -25,15 +25,17 @@ namespace Lab6
             //Timer timer;
         }
 
-        public static void PrintCountdown()
+        public static void PrintCountdown(MainWindow pubWindow)
         {
-            while (countDown > 0 && pubPaused)
+            Task.Run(() =>
             {
-                countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds;
-                
-                Console.WriteLine($"{countDown} s");
-                Thread.Sleep(100);
-            }
+                while (countDown > 0 && !pubPaused)
+                {
+                    countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds;
+                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
+                    Task.Delay(200);
+                }
+            });
         }
 
 

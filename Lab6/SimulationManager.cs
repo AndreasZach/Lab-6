@@ -6,11 +6,21 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class SimulationManager
+    public class SimulationManager
     {
-        public void Main()
-        {
+        public MainWindow pubWindow;
 
+        public SimulationManager(MainWindow window)
+        {
+            pubWindow = window;
         }
+
+        public void Run()
+        {
+            Time.SetPubHours(120);
+            Time.PrintCountdown(pubWindow);
+        }
+        
+
     }
 }
