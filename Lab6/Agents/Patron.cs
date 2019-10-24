@@ -14,6 +14,10 @@ namespace Lab6
         public Glass CarriedBeer { get; set; }
         public Chair ChairUsed { get; set; }
 
+        public Patron()
+        {
+
+        }
         public Patron(string name)
         {
             Thread.Sleep(1000);

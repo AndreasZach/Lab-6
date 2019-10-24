@@ -10,27 +10,48 @@ namespace Lab6
 {
     class Bartender : Agent
     {
-        public Glass CarriedGlass { get; set; }
-        public int MyProperty { get; set; }
+        private Glass carriedGlass = null;
+        private Patron currentPatron = null;
 
-        public void WaitForPatron()
+        public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
         {
-            //TODO: Match with async
-        }
-
-        public void FetchGlass(ConcurrentQueue<Glass> glass)
-        {
-            Glass toHold;
-            glass.TryDequeue(out toHold);
-            CarriedGlass = toHold;
-            Thread.Sleep(); //Call method for correct time.
+            if (queueToBar.IsEmpty)
+            {
+                SendStatusToLog("Waiting for patron");
+                while (queueToBar.IsEmpty)
+                {
+                    queueToBar.TryPeek(out currentPatron);
+                }
+            }
+            if (glassesInShelf.IsEmpty)
+            {
+                SendStatusToLog("Waiting for a clean glass");
+                while (glassesInShelf.IsEmpty)
+                {
+                    glassesInShelf.TryDequeue(out carriedGlass);
+                }
+            }
+            FetchGlass();
             ServeBeer();
         }
 
-        public Glass ServeBeer()
+        public void FetchGlass()
         {
-            Thread.Sleep(); //Call method for correct time.
-            return CarriedGlass;
+            carriedGlass.IsAvailable = false;
+            Thread.Sleep(3000); //Call method for correct time.
+        }
+
+        public void ServeBeer()
+        {
+            Thread.Sleep(3000); //Call method for correct time.
+            currentPatron.CarriedBeer = carriedGlass;
+            carriedGlass = null;
+            currentPatron = null;
+        }
+
+        public override void SendStatusToLog(string toLog)
+        {
+            //Method(toLog)
         }
     }
 }

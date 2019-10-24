@@ -15,12 +15,43 @@ namespace Lab6
         Bouncer bouncer = new Bouncer();
         Waiter waiter = new Waiter();
 
+        ConcurrentQueue<Glass> shelfOfGlasses =  new ConcurrentQueue<Glass>();
+        ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
+        public int SumAmountGlasses { get; set; }
+        public int SumAmountChairs { get; set; }
+        bool pubClosing = false;
 
         public async void Run()
         {
-            Task.Run(bartender.WaitForPatron);
-            Task.Run(bouncer.AllowPatronEntry);
+            GeneratePubItems();
+            Task.Run( () => BouncerProcess() );
+            Task.Run( () => BartenderProcess() );
+        }
+
+        public void BartenderProcess()
+        {
+            bartender.Work(shelfOfGlasses, queueToBar);
+        }
+
+        public async void BouncerProcess()
+        {
+            while(!pubClosing)
+            {
+                await Task.Run( () => bouncer.AllowPatronEntry(queueToBar) );
+            }
+        }
+
+        public void GeneratePubItems()
+        {
+            for (int i = 0; i < SumAmountGlasses; i++)
+            {
+                shelfOfGlasses.Enqueue(new Glass());
+            }
+            for (int i = 0; i < SumAmountChairs; i++)
+            {
+                availableChairs.Enqueue(new Chair());
+            }
         }
     }
 }
