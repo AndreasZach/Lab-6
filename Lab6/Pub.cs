@@ -9,18 +9,23 @@ namespace Lab6
 {
     class Pub
     {
-        PubManager manager = new PubManager();
-
-        Bartender bartender = new Bartender();
-        Bouncer bouncer = new Bouncer();
-        Waiter waiter = new Waiter();
-
+        public int NumberOfPatrons { get; set; }
+        bool pubClosing = false;
         ConcurrentQueue<Glass> shelfOfGlasses =  new ConcurrentQueue<Glass>();
         ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
+        ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
         public int SumAmountGlasses { get; set; }
         public int SumAmountChairs { get; set; }
-        bool pubClosing = false;
+      
+        public Pub()
+        {
+            PubManager manager = new PubManager();
+
+            Bartender bartender = new Bartender();
+            Bouncer bouncer = new Bouncer();
+            Waiter waiter = new Waiter();
+        }
 
         public async void Run()
         {
