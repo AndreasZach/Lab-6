@@ -8,5 +8,9 @@ namespace Lab6
 {
     class SimulationManager
     {
+        public void Main()
+        {
+
+        }
     }
 }
