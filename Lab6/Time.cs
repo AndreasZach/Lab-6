@@ -40,8 +40,10 @@ namespace Lab6
             return timeStamp;
         }
 
-        public static void PausePub()
+        public static void PausePub(bool pause)
         {
+            pubPaused = !pause;
+
 
         }
         public static void ExtendPubHour(int pauseTime)

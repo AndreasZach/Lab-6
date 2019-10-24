@@ -76,5 +76,10 @@ namespace Lab6
         {
             throw new NotImplementedException();
         }
+
+        private void SimStateComboBox_SelectionChanged_1()
+        {
+
+        }
     }
 }
