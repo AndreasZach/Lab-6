@@ -36,14 +36,14 @@ namespace Lab6
 
         public void BartenderProcess()
         {
-            bartender.Work(shelfOfGlasses, queueToBar);
+            //bartender.Work(shelfOfGlasses, queueToBar);
         }
 
         public async void BouncerProcess()
         {
             while(!pubClosing)
             {
-                await Task.Run( () => bouncer.AllowPatronEntry(queueToBar) );
+                //await Task.Run( () => bouncer.AllowPatronEntry(queueToBar) );
             }
         }
 

@@ -39,7 +39,7 @@ namespace Lab6
 
         public void DrinkBeer()
         {
-            Thread.Sleep(); //Random time between 10-20
+            Thread.Sleep(1000); //Random time between 10-20
         }
         //Return both chair and glass via property and Pub class
     }
