@@ -25,7 +25,7 @@ namespace Lab6
                 patronNames.TryTake(out name);
                 if (name != null)
                     queueToBar.Enqueue(new Patron(name));
-                Thread.Sleep((RandomTidMetod(minInterval,maxInterval)) * 1000);
+                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval,maxInterval)) * 1000);
             }
         }
     }

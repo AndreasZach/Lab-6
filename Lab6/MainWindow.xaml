@@ -70,7 +70,7 @@
                 Margin="0,40,0,0" 
                 VerticalAlignment="Center" 
                 Width="100"
-                Height="30"/>
+                Height="30" IsEnabled="False"/>
 
         <Button x:Name="PauseWaiterButton"
                 Content="Pause Waiter"
@@ -80,7 +80,7 @@
                 Margin="0,40,0,0" 
                 VerticalAlignment="Center" 
                 Width="100"
-                Height="30"/>
+                Height="30" IsEnabled="False"/>
 
         <Button x:Name="PauseBouncerButton"
                 Content="Pause Bouncer"
@@ -90,7 +90,7 @@
                 Margin="0,40,0,0" 
                 VerticalAlignment="Center" 
                 Width="100"
-                Height="30"/>
+                Height="30" IsEnabled="False"/>
 
         <Label Content="&quot;Open hours&quot;"
                Grid.Column="2"
@@ -116,7 +116,7 @@
                HorizontalAlignment="Center"
                Margin="0,5,0,0"
                VerticalAlignment="Top"/>
-        <ComboBox x:Name="SpeedComboBox" 
+        <ComboBox x:Name="SimStateComboBox" 
                   Grid.Column="2" 
                   Grid.Row="1" 
                   HorizontalAlignment="Center" 
@@ -131,7 +131,7 @@
                 Margin="0,0,0,5" 
                 VerticalAlignment="Bottom" 
                 Width="140"
-                Height="30"/>
+                Height="30" IsEnabled="False"/>
         <Label x:Name="PatronLabel"
                Content="Patrons: " 
                Grid.Column="2"
