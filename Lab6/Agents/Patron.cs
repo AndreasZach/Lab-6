@@ -10,31 +10,36 @@ namespace Lab6
 {
     class Patron : Agent
     {
+        public int DebugTimeToStay { get; set; }
+        private int patronID;
         private string name;
         private Glass carriedBeer;
         private Chair chairUsed;
         public int minInterval { get; set; }
         public int maxInterval { get; set; }
 
-        public Patron(string name)
+        public Patron(string name, int ID)
         {
             this.name = name;
-            
+            patronID = ID;
+            SendStatusToLog($"{name} enters the pub");
         }
 
         public void GoToBar(ConcurrentQueue<Patron> queueToBar)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(1 * DebugTimeToStay);
             queueToBar.Enqueue(this);
             while (!HasBeer())
             {
                 HasBeer();
             }
+            _ = queueToBar.TryDequeue(out _);
         }
 
-        public void FindChair(ConcurrentQueue<Patron> queueToBar,ConcurrentQueue<Patron> queueToChair, ConcurrentBag<Chair> availableChairs)
+        public void FindChair(ConcurrentQueue<Patron> queueToChair, ConcurrentBag<Chair> availableChairs)
         {
-            _ = queueToBar.TryDequeue(out _);
+            SendStatusToLog($"{name} looks for an available chair");
+            Thread.Sleep(4 * DebugTimeToStay);
             queueToChair.Enqueue(this);
             while(availableChairs == null)
             {
@@ -47,12 +52,11 @@ namespace Lab6
 
         public void DrinkBeer()
         {
-            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * 1000);
+            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * DebugTimeToStay);
             carriedBeer.IsDirty = true;
-
         }
 
-        public void LeaveBar(ConcurrentBag<Patron> allPatrons, ConcurrentBag<Chair> availableChairs, ConcurrentBag<Glass> glassesOnTables)
+        public void LeaveBar(ConcurrentDictionary<int, Patron> allPatrons, ConcurrentBag<Chair> availableChairs, ConcurrentBag<Glass> glassesOnTables)
         {
             carriedBeer.IsAvailable = true;
             chairUsed.IsAvailable = true;
@@ -60,7 +64,12 @@ namespace Lab6
             chairUsed = null;
             glassesOnTables.Add(carriedBeer);
             carriedBeer = null;
-            concurre
+            allPatrons.TryRemove(patronID, out _);
+        }
+
+        public string GetName()
+        {
+            return name;
         }
 
         public bool HasBeer()

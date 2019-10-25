@@ -9,6 +9,20 @@ namespace Lab6
     public class SimulationManager
     {
         public MainWindow pubWindow;
+        Pub pubSimulation = new Pub();
+        public enum DebugTestState
+        {
+            Standard,
+            MoreGlasses,
+            MoreChairs,
+            PatronDoubleStay,
+            TurboWaiter,
+            BusinessTimeIncrease,
+            CouplesNight,
+            HappyHour
+        };
+        Dictionary<Enum, Action> stateHandlers = new Dictionary<Enum, Action>();
+
 
         public SimulationManager(MainWindow window)
         {
@@ -21,6 +35,9 @@ namespace Lab6
             Time.PrintCountdown(pubWindow);
         }
         
-
+        public void SetTestStateData()
+        {
+            
+        }
     }
 }

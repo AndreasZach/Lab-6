@@ -28,29 +28,26 @@ namespace Lab6
                 SendStatusToLog("Waiting for a clean glass");
                 while (glassesInShelf.IsEmpty)
                 {
-                    glassesInShelf.TryDequeue(out carriedGlass);
+                    Thread.Sleep(50);
                 }
+                glassesInShelf.TryDequeue(out carriedGlass);
             }
-
         }
 
         public void FetchGlass()
         {
+            SendStatusToLog("Fetching a glass");
             carriedGlass.IsAvailable = false;
             Thread.Sleep(3000);
         }
 
         public void ServeBeer()
         {
+            SendStatusToLog($"Pouring a beer for {currentPatron.GetName()}");
             Thread.Sleep(3000);
             currentPatron.SetBeer(carriedGlass);
             carriedGlass = null;
             currentPatron = null;
-        }
-
-        public override void SendStatusToLog(string toLog)
-        {
-            //Method(toLog)
         }
     }
 }
