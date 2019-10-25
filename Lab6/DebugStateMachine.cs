@@ -12,19 +12,6 @@ namespace Lab6
     /// </summary>
     class DebugState
     {
-        public enum TestState
-        {
-            Standard,
-            MoreGlasses,
-            MoreChairs,
-            PatronDoubleStay,
-            TurboWaiter,
-            BusinessTimeIncrease,
-            CouplesNight,
-            HappyHour
-        };
-
-        Dictionary<Enum, Delegate> stateHandlers = new Dictionary<Enum, Delegate>();
 
 
     }
