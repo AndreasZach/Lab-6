@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,7 +34,9 @@ namespace Lab6
 
         public void BartenderProcess()
         {
-            bartender.Work(shelfOfGlasses, queueToBar);
+            //bartender.Work(shelfOfGlasses, queueToBar);
+            //bartender.FetchGlass();
+            //bartender.ServeBeer();
             bartender.FetchGlass();
             bartender.ServeBeer();
         }
@@ -43,7 +45,7 @@ namespace Lab6
         {
             while(!pubClosing)
             {
-                bouncer.AllowPatronEntry(allPatrons, PatronProcess);
+                //bouncer.AllowPatronEntry(allPatrons, PatronProcess);
             }
         }
 
