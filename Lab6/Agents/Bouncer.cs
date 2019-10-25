@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +10,12 @@ namespace Lab6
 {
     class Bouncer : Agent
     {
-        //Add random name generator method to fill the List. Need to make it many names, so as to never let it get empty.
+
         public ConcurrentBag<string> patronNames = new ConcurrentBag<string>();
         public int minInterval { get; set; }
         public int maxInterval { get; set; }
 
         //TODO: Make it so that thread continues after returning a Patron
-
         public void BouncerStart(ConcurrentQueue<Patron> queueToBar)
         {
             while (LeftPub == false)
@@ -29,15 +28,19 @@ namespace Lab6
             }
         }
         
-        public void AllowPatronEntry(ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
+        public void AllowPatronEntry(ConcurrentBag<Patron> allPatrons, Action<Patron> createPatronTask)
         {
             while (LeftPub != true)
             {
+                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * 1000);
                 string name;
                 patronNames.TryTake(out name);
                 if (name != null)
-                    queueToBar.Enqueue(new Patron(name, queueToBar, availableChairs));
-                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval,maxInterval)) * 1000);
+                {
+                    Patron tempPatron = new Patron(name);
+                    createPatronTask(tempPatron);
+                    allPatrons.Add(tempPatron);
+                }
             }
         }
     }

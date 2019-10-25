@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,9 @@ namespace Lab6
 {
     class Waiter : Agent
     {
-        List<Glass> dirtyGlassesCarried = new List<Glass>();
-        // Create collection carried glasses
+        ConcurrentBag<Glass> dirtyGlassedCarried = new ConcurrentBag<Glass>();
 
-        public void GatherDirtyGlasses(List<Glass> dirtyGlasses)
+        public void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {
             
         }
