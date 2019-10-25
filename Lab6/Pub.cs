@@ -12,9 +12,11 @@ namespace Lab6
         public int NumberOfPatrons { get; set; }
         bool pubClosing = false;
         ConcurrentQueue<Glass> shelfOfGlasses =  new ConcurrentQueue<Glass>();
-        ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
+        ConcurrentBag<Chair> availableChairs = new ConcurrentBag<Chair>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
+        SynchronizedColl<Patron> allPatrons = new ConcurrentBag<Patron>();
+
         public int SumAmountGlasses { get; set; }
         public int SumAmountChairs { get; set; }
 
@@ -22,29 +24,42 @@ namespace Lab6
         Bartender bartender = new Bartender();
         Waiter waiter = new Waiter();
 
-        public async void Run()
+        public void Run()
         {
             GeneratePubItems();
-            Task.Run( () => BouncerProcess() );
-            Task.Run( () => BartenderProcess() );
+            Task.Run(() => BouncerProcess());
+            Task.Run(() => BartenderProcess());
+            Task.Run(() => BouncerProcess());
         }
 
-        public async void BartenderProcess()
+        public void BartenderProcess()
         {
             bartender.Work(shelfOfGlasses, queueToBar);
+            bartender.FetchGlass();
+            bartender.ServeBeer();
         }
 
-        public async void BouncerProcess()
+        public void BouncerProcess()
         {
             while(!pubClosing)
             {
-                await Task.Run( () => bouncer.AllowPatronEntry(queueToBar) );
+                bouncer.AllowPatronEntry(allPatrons, PatronProcess);
             }
         }
 
-        public async void WaiterProcess()
+        public void WaiterProcess()
         {
 
+        }
+
+        public void PatronProcess(Patron patron)
+        {
+            Task.Run(() => 
+            {
+                patron.GoToBar(queueToBar);
+                patron.FindChair(queueToBar, queueToChairs, availableChairs);
+                patron.DrinkBeer(allPatrons, availableChairs);
+            });
         }
 
         public void GeneratePubItems()
@@ -55,7 +70,7 @@ namespace Lab6
             }
             for (int i = 0; i < SumAmountChairs; i++)
             {
-                availableChairs.Enqueue(new Chair());
+                availableChairs.Add(new Chair());
             }
         }
     }
