@@ -31,19 +31,18 @@ namespace Lab6
                     glassesInShelf.TryDequeue(out carriedGlass);
                 }
             }
-            FetchGlass();
-            ServeBeer();
+
         }
 
         public void FetchGlass()
         {
             carriedGlass.IsAvailable = false;
-            Thread.Sleep(3000); //Call method for correct time.
+            Thread.Sleep(3000);
         }
 
         public void ServeBeer()
         {
-            Thread.Sleep(3000); //Call method for correct time.
+            Thread.Sleep(3000);
             currentPatron.SetBeer(carriedGlass);
             carriedGlass = null;
             currentPatron = null;

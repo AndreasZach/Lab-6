@@ -16,13 +16,13 @@ namespace Lab6
         public int minInterval { get; set; }
         public int maxInterval { get; set; }
 
-        public Patron(string name, ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
+        public Patron(string name)
         {
             this.name = name;
-            GoToBar(queueToBar, availableChairs);
+            
         }
 
-        public void GoToBar(ConcurrentQueue<Patron> queueToBar, ConcurrentBag<Chair> availableChairs)
+        public void GoToBar(ConcurrentQueue<Patron> queueToBar)
         {
             Thread.Sleep(1000);
             queueToBar.Enqueue(this);
@@ -30,24 +30,37 @@ namespace Lab6
             {
                 HasBeer();
             }
-            FindChair(availableChairs);
         }
 
-        public void FindChair(ConcurrentBag<Chair> foundChair)
+        public void FindChair(ConcurrentQueue<Patron> queueToBar,ConcurrentQueue<Patron> queueToChair, ConcurrentBag<Chair> availableChairs)
         {
-            Chair tempChair;
-            while(foundChair == null)
+            _ = queueToBar.TryDequeue(out _);
+            queueToChair.Enqueue(this);
+            while(availableChairs == null)
             {
                 Thread.Sleep(50);
             }
-            foundChair.TryTake(out tempChair);
-            chairUsed = tempChair;
-            DrinkBeer();
+            availableChairs.TryTake(out chairUsed);
+            chairUsed.IsAvailable = false; //Keep?
+            _ = queueToChair.TryDequeue(out _);
         }
 
         public void DrinkBeer()
         {
             Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * 1000);
+            carriedBeer.IsDirty = true;
+
+        }
+
+        public void LeaveBar(ConcurrentBag<Patron> allPatrons, ConcurrentBag<Chair> availableChairs, ConcurrentBag<Glass> glassesOnTables)
+        {
+            carriedBeer.IsAvailable = true;
+            chairUsed.IsAvailable = true;
+            availableChairs.Add(chairUsed);
+            chairUsed = null;
+            glassesOnTables.Add(carriedBeer);
+            carriedBeer = null;
+            concurre
         }
 
         public bool HasBeer()
