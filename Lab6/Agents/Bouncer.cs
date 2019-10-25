@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +16,18 @@ namespace Lab6
         public int maxInterval { get; set; }
 
         //TODO: Make it so that thread continues after returning a Patron
+        public void BouncerStart(ConcurrentQueue<Patron> queueToBar)
+        {
+            while (LeftPub == false)
+            {
+                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * 1000);
+                string name;
+                patronNames.TryTake(out name);
+                if (name != null)
+                    queueToBar.Enqueue(new Patron(name));
+            }
+        }
+        
         public void AllowPatronEntry(ConcurrentBag<Patron> allPatrons, Action<Patron> createPatronTask)
         {
             while (LeftPub != true)

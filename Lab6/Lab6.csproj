@@ -64,6 +64,7 @@
     <Compile Include="PubItems\PubItem.cs" />
     <Compile Include="PubManager.cs" />
     <Compile Include="RandomIntGenerator.cs" />
+    <Compile Include="SimulationManager.cs" />
     <Compile Include="Time.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
