@@ -35,6 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -59,13 +60,12 @@
     <Compile Include="Agents\Bouncer.cs" />
     <Compile Include="Agents\Patron.cs" />
     <Compile Include="Agents\Waiter.cs" />
-    <Compile Include="DebugStateMachine.cs" />
     <Compile Include="Pub.cs" />
     <Compile Include="PubItems\PubItem.cs" />
-    <Compile Include="PubManager.cs" />
     <Compile Include="RandomIntGenerator.cs" />
     <Compile Include="SimulationManager.cs" />
     <Compile Include="Time.cs" />
+    <Compile Include="UIUpdater.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

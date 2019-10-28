@@ -8,21 +8,21 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Waiter : Agent
+    public class Waiter : Agent
     {
-        public double DebugSpeed { get; set; } = 1;
+        static public double DebugSpeed { get; set; }
         ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
 
         public void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {
             if(glassesToGather.IsEmpty)
-                SendStatusToLog("Waiting for work");
+                LogStatus("Waiting for work");
             while (glassesToGather.IsEmpty)
             {
                 Thread.Sleep(50);
             }
-            SendStatusToLog("Gathering Glasses");
-            Thread.Sleep((int)(10000 * DebugSpeed));
+            LogStatus("Gathering Glasses");
+            Thread.Sleep((int)((10000 * DebugSpeed) * simulationSpeed));
             while (!glassesToGather.IsEmpty)
             {
                 glassesToGather.TryTake(out Glass toGather);
@@ -32,15 +32,19 @@ namespace Lab6
 
         public void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesOnShelf)
         {
-            SendStatusToLog("Washing and storing dishes");
-            Thread.Sleep((int)(15000 * DebugSpeed));
+            LogStatus("Washing and storing dishes");
+            Thread.Sleep((int)((15000 * DebugSpeed) * simulationSpeed));
             while (!glassesCarried.IsEmpty)
             {
                 glassesCarried.TryTake(out Glass toStore);
-                toStore.IsDirty = false;
-                toStore.IsAvailable = true;
                 glassesOnShelf.Enqueue(toStore);
+                UIUpdater.UpdateGlassesLabel(glassesOnShelf.Count());
             }
+        }
+
+        public override void LogStatus(string newStatus)
+        {
+            UIUpdater.LogWaiterAction(newStatus);
         }
     }
 }

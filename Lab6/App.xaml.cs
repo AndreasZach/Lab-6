@@ -18,42 +18,58 @@ namespace Lab6
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             window = new MainWindow();
+            simManager = new SimulationManager();
+            UIUpdater.InitializeUpdater(window);
             window.InitializeComponent();
+            simManager.PopulateTestCollection();
+            window.SimStateComboBox.ItemsSource = simManager.stateHandlers.Keys;
+            window.SpeedComboBox.ItemsSource = simManager.simSpeed.Keys;
             window.PauseBartenderButton.Click += PauseBartenderButton_Click;
             window.PauseWaiterButton.Click += PauseWaiterButton_Click;
             window.PauseWaiterButton.Click += PauseWaiterButton_Click1;
-            window.PauseBarButton.Click += PauseBarButton_Click;
             window.OpenCloseButton.Click += OpenCloseButton_Click;
             window.SimStateComboBox.SelectionChanged += SimStateComboBox_SelectionChanged;
+            window.SpeedComboBox.SelectionChanged += SpeedComboBox_SelectionChanged;
+            window.SpeedComboBox.SelectedItem = simManager.simSpeed.Keys.First();
             window.Show();
-            simManager = new SimulationManager(window);
+        }
+
+        private void SpeedComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            simManager.SetSimulationSpeed(window.SpeedComboBox.SelectedItem);
+            window.SpeedComboBox.Items.Refresh();
         }
 
         private void SimStateComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        private void RefreshListBoxes()
-        {
-            window.BartenderListBox.Items.Refresh();
-            window.WaiterListBox.Items.Refresh();
-            window.PatronLisBox.Items.Refresh();
+            if (window.SimStateComboBox.SelectedItem != null)
+            {
+                simManager.SetTestState(window.SimStateComboBox.SelectedItem);
+                window.OpenCloseButton.IsEnabled = true;
+            }
+            else
+            {
+                window.OpenCloseButton.IsEnabled = false;
+            }
         }
 
         private void OpenCloseButton_Click(object sender, RoutedEventArgs e)
         {
             window.SimStateComboBox.IsEnabled = false;
-            window.PauseBarButton.IsEnabled = true;
             window.PauseBartenderButton.IsEnabled = true;
             window.PauseBouncerButton.IsEnabled = true;
             window.PauseWaiterButton.IsEnabled = true;
+            window.OpenCloseButton.IsEnabled = false;
+            if (window.SimStateComboBox.SelectedItem.ToString() == "BusinessTimeIncrease")
+            {
+                Time.SetPubHours(300);
+            }
+            else
+            {
+                Time.SetPubHours(120);
+            }
             simManager.Run();
-        }
-
-        private void PauseBarButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            Time.PrintCountdown(window);
         }
 
         private void PauseWaiterButton_Click1(object sender, RoutedEventArgs e)
