@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Chair : PubItem
+    public class Chair : PubItem
     {
-
     }
 }
