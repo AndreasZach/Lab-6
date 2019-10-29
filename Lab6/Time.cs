@@ -11,25 +11,25 @@ namespace Lab6
     {
         static public event Action CountdownComplete;
         private static DateTime openTime;
-        private static DateTime closeTime;
-        private static int countDown;
+        private static DateTime closeTime = DateTime.Now;
         private static double oldSimulationSpeed = 1;
+        private static int countDown;
         private static string timeStamp;
 
+        public static double NewSimulationSpeed { get; set; }
         public static int SimulationTime { get; set; }
 
         public static void SetPubHours()
         {
             openTime = DateTime.Now;
-            closeTime = openTime.AddSeconds(SimulationTime * Agent.SimulationSpeed);
+            closeTime = openTime.AddSeconds(SimulationTime * NewSimulationSpeed);
             countDown = SimulationTime;
-            oldSimulationSpeed = Agent.SimulationSpeed;
         }
 
-        public static void ChangePubHours(double newSimulationSpeed)
+        public static void ChangePubHours()
         {
-            closeTime = DateTime.Now.AddMilliseconds(closeTime.Subtract(DateTime.Now).TotalMilliseconds / oldSimulationSpeed * newSimulationSpeed);
-            oldSimulationSpeed = newSimulationSpeed;
+            closeTime = DateTime.Now.AddMilliseconds((closeTime.Subtract(DateTime.Now).TotalMilliseconds) / oldSimulationSpeed * NewSimulationSpeed);
+            oldSimulationSpeed = NewSimulationSpeed;
         }
         public static void PrintCountdown(MainWindow pubWindow)
         {
@@ -38,7 +38,7 @@ namespace Lab6
                 while (countDown > 0)
                 {
 
-                    countDown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / Agent.SimulationSpeed);
+                    countDown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
                     pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
                     Thread.Sleep(100);
                 }

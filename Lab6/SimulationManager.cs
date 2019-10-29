@@ -110,17 +110,20 @@ namespace Lab6
             if (simSpeed[(string)selectedSpeed] == 2)
             {
                 Agent.SimulationSpeed = 0.5;
-                Time.ChangePubHours(0.5);
+                Time.NewSimulationSpeed = 0.5;
+                Time.ChangePubHours();
             }
             if (simSpeed[(string)selectedSpeed] == 4)
             {
                 Agent.SimulationSpeed = 0.25;
-                Time.ChangePubHours(0.25);
+                Time.NewSimulationSpeed = 0.25;
+                Time.ChangePubHours();
             }
             if (simSpeed[(string)selectedSpeed] != 2 && simSpeed[(string)selectedSpeed] != 4)
             {
                 Agent.SimulationSpeed = 1;
-                Time.ChangePubHours(1);
+                Time.NewSimulationSpeed = 1;
+                Time.ChangePubHours();
             }
         }
     }
