@@ -10,8 +10,14 @@ namespace Lab6
 {
     public class Waiter : Agent
     {
+        private UIUpdater uiUpdater;
         static public double DebugSpeed { get; set; }
         ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
+
+        public Waiter(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+        }
 
         public void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {
@@ -22,7 +28,7 @@ namespace Lab6
                 Thread.Sleep(50);
             }
             LogStatus("Gathering Glasses");
-            Thread.Sleep((int)((10000 * DebugSpeed) * simulationSpeed));
+            Thread.Sleep((int)((10000 * DebugSpeed) * SimulationSpeed));
             while (!glassesToGather.IsEmpty)
             {
                 glassesToGather.TryTake(out Glass toGather);
@@ -33,18 +39,18 @@ namespace Lab6
         public void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesOnShelf)
         {
             LogStatus("Washing and storing dishes");
-            Thread.Sleep((int)((15000 * DebugSpeed) * simulationSpeed));
+            Thread.Sleep((int)((15000 * DebugSpeed) * SimulationSpeed));
             while (!glassesCarried.IsEmpty)
             {
                 glassesCarried.TryTake(out Glass toStore);
                 glassesOnShelf.Enqueue(toStore);
-                UIUpdater.UpdateGlassesLabel(glassesOnShelf.Count());
+                uiUpdater.UpdateGlassesLabel(glassesOnShelf.Count());
             }
         }
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogWaiterAction(newStatus);
+            uiUpdater.LogWaiterAction(newStatus);
         }
     }
 }

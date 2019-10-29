@@ -19,15 +19,12 @@ namespace Lab6
         {
             window = new MainWindow();
             simManager = new SimulationManager();
-            UIUpdater.InitializeUpdater(window);
+            simManager.uiUpdater.InitializeUpdater(window);
             window.InitializeComponent();
             simManager.PopulateTestCollection();
             window.SimStateComboBox.ItemsSource = simManager.stateHandlers.Keys;
             window.SpeedComboBox.ItemsSource = simManager.simSpeed.Keys;
-            window.PauseBartenderButton.Click += PauseBartenderButton_Click;
-            window.PauseWaiterButton.Click += PauseWaiterButton_Click;
-            window.PauseWaiterButton.Click += PauseWaiterButton_Click1;
-            window.OpenCloseButton.Click += OpenCloseButton_Click;
+            window.OpenPubButton.Click += OpenCloseButton_Click;
             window.SimStateComboBox.SelectionChanged += SimStateComboBox_SelectionChanged;
             window.SpeedComboBox.SelectionChanged += SpeedComboBox_SelectionChanged;
             window.SpeedComboBox.SelectedItem = simManager.simSpeed.Keys.First();
@@ -45,46 +42,21 @@ namespace Lab6
             if (window.SimStateComboBox.SelectedItem != null)
             {
                 simManager.SetTestState(window.SimStateComboBox.SelectedItem);
-                window.OpenCloseButton.IsEnabled = true;
+                window.OpenPubButton.IsEnabled = true;
             }
             else
             {
-                window.OpenCloseButton.IsEnabled = false;
+                window.OpenPubButton.IsEnabled = false;
             }
         }
 
         private void OpenCloseButton_Click(object sender, RoutedEventArgs e)
         {
             window.SimStateComboBox.IsEnabled = false;
-            window.PauseBartenderButton.IsEnabled = true;
-            window.PauseBouncerButton.IsEnabled = true;
-            window.PauseWaiterButton.IsEnabled = true;
-            window.OpenCloseButton.IsEnabled = false;
-            if (window.SimStateComboBox.SelectedItem.ToString() == "BusinessTimeIncrease")
-            {
-                Time.SetPubHours(300);
-            }
-            else
-            {
-                Time.SetPubHours(120);
-            }
+            window.OpenPubButton.IsEnabled = false;
+            Time.SetPubHours();
             simManager.Run();
             Time.PrintCountdown(window);
-        }
-
-        private void PauseWaiterButton_Click1(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void PauseWaiterButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void PauseBartenderButton_Click(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
         }
     }
 }

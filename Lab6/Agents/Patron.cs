@@ -10,6 +10,7 @@ namespace Lab6
 {
     public class Patron : Agent
     {
+        private UIUpdater uiUpdater;
         static public int DebugTimeToStay { get; set; }
         private int patronID;
         private string name;
@@ -18,17 +19,17 @@ namespace Lab6
         private int minInterval = 10;
         private int maxInterval = 21;
 
-        public Patron(string name, int ID)
+        public Patron(string name, int ID, UIUpdater uiUpdater)
         {
             this.name = name;
+            this.uiUpdater = uiUpdater;
             patronID = ID;
             LogStatus($"{name} enters the pub");
-
         }
 
         public void GoToBar(ConcurrentQueue<Patron> queueToBar)
         {
-            Thread.Sleep((int)((1 * DebugTimeToStay) * simulationSpeed));
+            Thread.Sleep((int)((1 * DebugTimeToStay) * SimulationSpeed));
             queueToBar.Enqueue(this);
             while(!HasBeer())
             {
@@ -43,14 +44,14 @@ namespace Lab6
             if (EndWork)
                 return;
             LogStatus($"{name} looks for an available chair"); 
-            Thread.Sleep((int)((4 * DebugTimeToStay) * simulationSpeed));
+            Thread.Sleep((int)((4 * DebugTimeToStay) * SimulationSpeed));
             queueToChair.Enqueue(this);
             while(availableChairs == null)
             {
                 Thread.Sleep(50);
             }
             availableChairs.TryTake(out chairUsed);
-            UIUpdater.UpdateChairLabel(availableChairs.Count());
+            uiUpdater.UpdateChairLabel(availableChairs.Count());
             _ = queueToChair.TryDequeue(out _);
         }
 
@@ -59,21 +60,21 @@ namespace Lab6
             if (EndWork)
                 return;
             LogStatus($"{name} sits down and drinks their beer");
-            Thread.Sleep((int)((RandomIntGenerator.GetRandomInt(minInterval, maxInterval) * DebugTimeToStay) * simulationSpeed));
+            Thread.Sleep((int)((RandomIntGenerator.GetRandomInt(minInterval, maxInterval) * DebugTimeToStay) * SimulationSpeed));
         }
 
         public void LeaveBar(ConcurrentDictionary<int, Patron> allPatrons, ConcurrentBag<Chair> availableChairs, ConcurrentBag<Glass> glassesOnTables)
         {
             if (chairUsed != null)
                 availableChairs.Add(chairUsed);
-            UIUpdater.UpdateChairLabel(availableChairs.Count());
+            uiUpdater.UpdateChairLabel(availableChairs.Count());
             chairUsed = null;
             if (carriedBeer != null)
                 glassesOnTables.Add(carriedBeer);
             carriedBeer = null;
             allPatrons.TryRemove(patronID, out _);
             LogStatus($"{name} leaves the pub");
-            UIUpdater.UpdatePatronLabel(allPatrons.Count());
+            uiUpdater.UpdatePatronLabel(allPatrons.Count());
         }
 
         public string GetName()
@@ -93,7 +94,7 @@ namespace Lab6
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogPatronAction(newStatus);
+            uiUpdater.LogPatronAction(newStatus);
         }
     }
 }

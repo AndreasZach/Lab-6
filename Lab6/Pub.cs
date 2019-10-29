@@ -9,6 +9,7 @@ namespace Lab6
 {
     public class Pub
     {
+        private UIUpdater uiUpdater;
         bool pubClosing = false;
         public ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
         public ConcurrentBag<Chair> availableChairs = new ConcurrentBag<Chair>();
@@ -17,14 +18,20 @@ namespace Lab6
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
         ConcurrentBag<Task> patronTasks = new ConcurrentBag<Task>();
+        Bouncer bouncer;
+        Bartender bartender;
+        Waiter waiter;
 
+        public Pub(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+            bouncer = new Bouncer(uiUpdater);
+            bartender = new Bartender(uiUpdater);
+            waiter = new Waiter(uiUpdater);
+        }
 
         public int SumAmountGlasses { get; set; }
         public int SumAmountChairs { get; set; }
-
-        Bouncer bouncer = new Bouncer();
-        Bartender bartender = new Bartender();
-        Waiter waiter = new Waiter();
 
         public void OpenPub()
         {
@@ -79,7 +86,7 @@ namespace Lab6
                     break;
             }
             waiter.LogStatus("Waiter leaves the pub");
-            UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
+            uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
         public void PatronProcess(Patron patron)

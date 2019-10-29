@@ -10,6 +10,7 @@ namespace Lab6
 {
     public class Bouncer : Agent
     {
+        private UIUpdater uiUpdater;
         private int patronID = 0;
         private string name = null;
         private List<string> patronNames = new List<string> {
@@ -24,6 +25,11 @@ namespace Lab6
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
 
+        public Bouncer(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+        }
+
         public void AllowPatronEntry(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
             if (CouplesNight)
@@ -36,17 +42,17 @@ namespace Lab6
                 DebugHappyHour(allPatrons, createPatronTask);
                 return;
             }
-            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * simulationSpeed));
+            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * SimulationSpeed));
             if (EndWork)
                 return;
             name = patronNames[RandomIntGenerator.GetRandomInt(0, (patronNames.Count() - 1))];
             if (name != null)
             {
                 patronID++;
-                Patron tempPatron = new Patron(name, patronID);
+                Patron tempPatron = new Patron(name, patronID, uiUpdater);
                 createPatronTask(tempPatron);
                 allPatrons.TryAdd(patronID, tempPatron);
-                UIUpdater.UpdatePatronLabel(allPatrons.Count());
+                uiUpdater.UpdatePatronLabel(allPatrons.Count());
                 name = null;
             }
         }
@@ -57,30 +63,30 @@ namespace Lab6
             {
                 Task.Run(() =>
                 {
-                    Thread.Sleep((int)(20000 * simulationSpeed));
+                    Thread.Sleep((int)(20000 * SimulationSpeed));
                     for (int i = 0; i < 15; i++)
                     {
                         string tempName;
                         tempName = patronNames[RandomIntGenerator.GetRandomInt(0, (patronNames.Count()))];
                         patronID++;
-                        Patron groupPatron = new Patron(tempName, patronID);
+                        Patron groupPatron = new Patron(tempName, patronID, uiUpdater);
                         createPatronTask(groupPatron);
                         allPatrons.TryAdd(patronID, groupPatron);
                         tempName = null;
                     }
-                    UIUpdater.UpdatePatronLabel(allPatrons.Count()); // Inside the for-loop? Performance heavy.
+                    uiUpdater.UpdatePatronLabel(allPatrons.Count()); // Inside the for-loop? Performance heavy.
                 });
             }
             completedHappyHourEvent = true;
-            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(2000 * simulationSpeed));
+            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(2000 * SimulationSpeed));
             if (EndWork)
                 return;
             name = patronNames[RandomIntGenerator.GetRandomInt(0, (patronNames.Count() - 1))];
             patronID++;
-            Patron tempPatron = new Patron(name, patronID);
+            Patron tempPatron = new Patron(name, patronID, uiUpdater);
             createPatronTask(tempPatron);
             allPatrons.TryAdd(patronID, tempPatron);
-            UIUpdater.UpdatePatronLabel(allPatrons.Count());
+            uiUpdater.UpdatePatronLabel(allPatrons.Count());
             name = null;
         }
 
@@ -88,23 +94,23 @@ namespace Lab6
         {
             if (EndWork)
                 return;
-            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * simulationSpeed));
+            Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * SimulationSpeed));
             for (int i = 0; i < 2; i++)
             {
                 string tempName;
                 tempName = patronNames[RandomIntGenerator.GetRandomInt(0, (patronNames.Count() - 1))];
                 patronID++;
-                Patron tempPatron = new Patron(tempName, patronID);
+                Patron tempPatron = new Patron(tempName, patronID, uiUpdater);
                 createPatronTask(tempPatron);
                 allPatrons.TryAdd(patronID, tempPatron);
-                UIUpdater.UpdatePatronLabel(allPatrons.Count());
+                uiUpdater.UpdatePatronLabel(allPatrons.Count());
                 name = null;
             }
         }
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogPatronAction(newStatus);
+            uiUpdater.LogPatronAction(newStatus);
         }
     }
 }

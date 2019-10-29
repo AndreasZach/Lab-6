@@ -13,63 +13,40 @@ namespace Lab6
         private static DateTime openTime;
         private static DateTime closeTime;
         private static int countDown;
-        private static bool pubPaused;
-        private static DateTime pauseStartTime;
-        private static DateTime pauseStopTime;
+        private static double oldSimulationSpeed = 1;
         private static string timeStamp;
 
-        public static void SetPubHours(int seconds)
+        public static int SimulationTime { get; set; }
+
+        public static void SetPubHours()
         {
             openTime = DateTime.Now;
-            closeTime = openTime.AddSeconds(seconds);
-            countDown = seconds;
-            //Timer timer;
+            closeTime = openTime.AddSeconds(SimulationTime * Agent.SimulationSpeed);
+            countDown = SimulationTime;
+            oldSimulationSpeed = Agent.SimulationSpeed;
         }
 
+        public static void ChangePubHours(double newSimulationSpeed)
+        {
+            closeTime = DateTime.Now.AddSeconds((int)(closeTime.Subtract(DateTime.Now).TotalSeconds / oldSimulationSpeed * newSimulationSpeed));
+            oldSimulationSpeed = newSimulationSpeed;
+        }
         public static void PrintCountdown(MainWindow pubWindow)
         {
             Task.Run(() =>
             {
-                while (countDown > 0 && !pubPaused)
+                while (countDown > 0)
                 {
-                        countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds;
-                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
-                        Task.Delay(200);
+
+                    countDown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / Agent.SimulationSpeed);
+                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
+                    Thread.Sleep(100);
                 }
                 pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
                 CountdownComplete();
             });
         }
 
-
-        public static void PausePub(bool pause)
-        {
-            if (pause)
-            {
-                if (pauseStartTime <= openTime)
-                {
-                    pubPaused = pause;
-                    pauseStartTime = DateTime.Now;
-                }
-            }
-            if (!pause)
-            {
-                if (pauseStartTime > pauseStopTime)
-                {
-                    pubPaused = !pause;
-                    pauseStopTime = DateTime.Now;
-                    ExtendPubHour((int)(pauseStopTime.Subtract(pauseStartTime).TotalMilliseconds));
-                    pauseStartTime = default;
-                    pauseStopTime = default;
-                }
-
-            }
-        }
-        public static void ExtendPubHour(int pauseTime)
-        {
-            closeTime = closeTime.AddMilliseconds(pauseTime);
-        }
-        
         public static string GetTimeStamp()
         {
             TimeSpan timeDiff = DateTime.Now.Subtract(openTime);

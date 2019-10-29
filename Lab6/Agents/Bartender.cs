@@ -11,8 +11,14 @@ namespace Lab6
 {
     public class Bartender : Agent
     {
+        private UIUpdater uiUpdater;
         private Glass carriedGlass = null;
         private Patron currentPatron = null;
+
+        public Bartender(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+        }
 
         public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
         {
@@ -37,7 +43,7 @@ namespace Lab6
             }
             if (carriedGlass == null)
                 glassesInShelf.TryDequeue(out carriedGlass);
-            UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
+            uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
         public void FetchGlass()
@@ -45,7 +51,7 @@ namespace Lab6
             if (EndWork)
                 return;
             LogStatus("Fetching a glass");
-            Thread.Sleep((int)(3000 * simulationSpeed));
+            Thread.Sleep((int)(3000 * SimulationSpeed));
         }
 
         public void ServeBeer()
@@ -55,7 +61,7 @@ namespace Lab6
             if (currentPatron == null)
                 return;
             LogStatus($"Pouring a beer for {currentPatron.GetName()}");
-            Thread.Sleep((int)(3000 * simulationSpeed));
+            Thread.Sleep((int)(3000 * SimulationSpeed));
             currentPatron.SetBeer(carriedGlass);
             carriedGlass = null;
             currentPatron = null;
@@ -63,14 +69,14 @@ namespace Lab6
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogBartenderAction(newStatus);
+            uiUpdater.LogBartenderAction(newStatus);
         }
 
         public void CleanUp(ConcurrentQueue<Glass> glassesInShelf)
         {
             if (carriedGlass != null)
                 glassesInShelf.Enqueue(carriedGlass);
-            UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
+            uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
     }
 }

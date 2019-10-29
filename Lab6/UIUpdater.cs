@@ -7,31 +7,36 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    static public class UIUpdater
+    public class UIUpdater
     {
         static private MainWindow window;
 
-        static public void InitializeUpdater(MainWindow uiWindow)
+        public void InitializeUpdater(MainWindow uiWindow)
         {
             window = uiWindow;
         }
 
-        static public void UpdatePatronLabel(int currentPatrons)
+        public void UpdatePatronLabel(int currentPatrons)
         {
             window.Dispatcher.Invoke(() => window.PatronLabel.Content = $"Patrons: {currentPatrons}");
         }
 
-        static public void UpdateChairLabel(int availableChairs)
+        public void UpdateChairLabel(int availableChairs)
         {
             window.Dispatcher.Invoke(() => window.ChairsLabel.Content = $"Chairs: {availableChairs}");
         }
 
-        static public void UpdateGlassesLabel(int availableGlasses)
+        public void UpdateGlassesLabel(int availableGlasses)
         {
             window.Dispatcher.Invoke(() => window.GlasesLabel.Content = $"Glasses: {availableGlasses}");
         }
 
-        static public void LogBartenderAction(string action)
+        public void UpdateCountDownLabel(int testStateTime)
+        {
+            window.Dispatcher.Invoke(() => window.CountDownLabel.Content = $"{testStateTime} s");
+        }
+
+        public void LogBartenderAction(string action)
         {
             window.Dispatcher.Invoke(() =>
             {
@@ -40,7 +45,7 @@ namespace Lab6
             });
         }
 
-        static public void LogWaiterAction(string action)
+        public void LogWaiterAction(string action)
         {
             window.Dispatcher.Invoke(() => 
             {
@@ -49,7 +54,7 @@ namespace Lab6
             });
         }
 
-        static public void LogPatronAction(string action)
+        public void LogPatronAction(string action)
         {
             window.Dispatcher.Invoke(() => 
             {
