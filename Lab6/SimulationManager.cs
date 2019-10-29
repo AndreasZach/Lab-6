@@ -15,6 +15,7 @@ namespace Lab6
         // TODO: Look at static members and classes, see what we can make more object-oriented.
 
         Pub pubSimulation = new Pub();
+        public Dictionary<TestState, Action> stateHandlers = new Dictionary<TestState, Action>();
         public Dictionary<string, int> simSpeed = new Dictionary<string, int>
         {
             { "Speed: x1", 1 },
@@ -32,7 +33,6 @@ namespace Lab6
             CouplesNight,
             HappyHour
         };
-        public Dictionary<TestState, Action> stateHandlers = new Dictionary<TestState, Action>();
 
         public void Run()
         {
