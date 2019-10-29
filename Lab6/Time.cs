@@ -28,7 +28,7 @@ namespace Lab6
 
         public static void ChangePubHours(double newSimulationSpeed)
         {
-            closeTime = DateTime.Now.AddSeconds((int)(closeTime.Subtract(DateTime.Now).TotalSeconds / oldSimulationSpeed * newSimulationSpeed));
+            closeTime = DateTime.Now.AddMilliseconds(closeTime.Subtract(DateTime.Now).TotalMilliseconds / oldSimulationSpeed * newSimulationSpeed);
             oldSimulationSpeed = newSimulationSpeed;
         }
         public static void PrintCountdown(MainWindow pubWindow)
