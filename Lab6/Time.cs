@@ -32,7 +32,7 @@ namespace Lab6
             {
                 while (countDown > 0 && !pubPaused)
                 {
-                        countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds;
+                        countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds ;
                         pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
                         Task.Delay(200);
                 }

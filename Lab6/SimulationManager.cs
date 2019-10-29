@@ -66,6 +66,7 @@ namespace Lab6
             stateHandlers.Add(TestState.BusinessTimeIncrease, () => 
             {
                 // Sets the timer until Pub closes to 300 seconds, See App.xaml.cs/OpenCloseButton_Click for the code.
+                SetPubState();
             });
             stateHandlers.Add(TestState.CouplesNight, () => 
             {

@@ -13,10 +13,12 @@ namespace Lab6
         static public int DebugTimeToStay { get; set; }
         private int patronID;
         private string name;
+        private int minInterval = 20;
+        private int maxInterval = 31;
         private Glass carriedBeer;
         private Chair chairUsed;
-        private int minInterval = 10;
-        private int maxInterval = 21;
+        enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
+        State currentState = default;
 
         public Patron(string name, int ID)
         {
@@ -26,22 +28,49 @@ namespace Lab6
 
         }
 
-        public void GoToBar(ConcurrentQueue<Patron> queueToBar)
+        public void DrownSorrows(ConcurrentQueue<Patron> queueToBar, ConcurrentQueue<Patron> queueToChairs, ConcurrentQueue<Chair> availableChairs,
+            ConcurrentDictionary<int, Patron> allPatrons, ConcurrentBag<Glass> glassesOnTables)
+        {
+            while (!LeftPub)
+            {
+                SetState(queueToBar);
+                switch (currentState)
+                {
+                    case State.GoingToBar:
+                        GoToBar(queueToBar);
+                        break;
+                    case State.AwaitingBeer:
+                        WaitForBeer();
+                        break;
+                    case State.FindChair:
+                        FindChair(queueToChairs, availableChairs);
+                        break;
+                    case State.DrinkingBeer:
+                        DrinkBeer();
+                        break;
+                    case State.LeavingPub:
+                        LeavePub(allPatrons, availableChairs, glassesOnTables);
+                        break;
+                }
+            }
+        }
+
+        private void GoToBar(ConcurrentQueue<Patron> queueToBar)
         {
             Thread.Sleep((int)((1 * DebugTimeToStay) * simulationSpeed));
             queueToBar.Enqueue(this);
-            while(!HasBeer())
+        }
+
+        private void WaitForBeer()
+        {
+            while (!HasBeer())
             {
-                if (EndWork)
-                    return;
                 Thread.Sleep(50);
             }
         }
 
-        public void FindChair(ConcurrentQueue<Patron> queueToChair, ConcurrentBag<Chair> availableChairs)
+        private void FindChair(ConcurrentQueue<Patron> queueToChair, ConcurrentQueue<Chair> availableChairs)
         {
-            if (EndWork)
-                return;
             LogStatus($"{name} looks for an available chair"); 
             Thread.Sleep((int)((4 * DebugTimeToStay) * simulationSpeed));
             queueToChair.Enqueue(this);
@@ -49,31 +78,30 @@ namespace Lab6
             {
                 Thread.Sleep(50);
             }
-            availableChairs.TryTake(out chairUsed);
+            availableChairs.TryDequeue(out chairUsed);
             UIUpdater.UpdateChairLabel(availableChairs.Count());
             _ = queueToChair.TryDequeue(out _);
         }
 
-        public void DrinkBeer()
+        private void DrinkBeer()
         {
-            if (EndWork)
-                return;
             LogStatus($"{name} sits down and drinks their beer");
             Thread.Sleep((int)((RandomIntGenerator.GetRandomInt(minInterval, maxInterval) * DebugTimeToStay) * simulationSpeed));
+            carriedBeer.ContainsBeer = false;
         }
 
-        public void LeaveBar(ConcurrentDictionary<int, Patron> allPatrons, ConcurrentBag<Chair> availableChairs, ConcurrentBag<Glass> glassesOnTables)
+        private void LeavePub(ConcurrentDictionary<int, Patron> allPatrons, ConcurrentQueue<Chair> availableChairs, ConcurrentBag<Glass> glassesOnTables)
         {
-            if (chairUsed != null)
-                availableChairs.Add(chairUsed);
+            if(chairUsed != null)
+                availableChairs.Enqueue(chairUsed);
             UIUpdater.UpdateChairLabel(availableChairs.Count());
             chairUsed = null;
-            if (carriedBeer != null)
-                glassesOnTables.Add(carriedBeer);
+            glassesOnTables.Add(carriedBeer);
             carriedBeer = null;
-            allPatrons.TryRemove(patronID, out _);
             LogStatus($"{name} leaves the pub");
+            allPatrons.TryRemove(patronID, out _);
             UIUpdater.UpdatePatronLabel(allPatrons.Count());
+            LeftPub = true;
         }
 
         public string GetName()
@@ -90,10 +118,40 @@ namespace Lab6
         {
             carriedBeer = beer;
         }
+        
 
         public override void LogStatus(string newStatus)
         {
             UIUpdater.LogPatronAction(newStatus);
+        }
+
+        private void SetState(ConcurrentQueue<Patron> queueToBar)
+        {
+            if (currentState == State.DrinkingBeer)
+            {
+                currentState = State.LeavingPub;
+                return;
+            }
+            if (currentState == State.FindChair)
+            {
+                currentState = State.DrinkingBeer;
+                return;
+            }
+            if (HasBeer() && chairUsed == null)
+            {
+                currentState = State.FindChair;
+                return;
+            }
+            if (!HasBeer() && !queueToBar.Contains(this))
+            {
+                currentState = State.GoingToBar;
+                return;
+            }
+            if (!HasBeer() && queueToBar.Contains(this))
+            {
+                currentState = State.AwaitingBeer;
+                return;
+            }
         }
     }
 }
