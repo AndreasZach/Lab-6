@@ -28,9 +28,6 @@ namespace Lab6
 
         public void OpenPub()
         {
-            int debugGlassesCount = glassesInShelf.Count();
-            int debugChairsCount = availableChairs.Count();
-            int debugPatronCount = allPatrons.Count();
             GeneratePubItems();
             Time.CountdownComplete += ClosePub;
             Task.Run(() => BouncerProcess()); 
@@ -75,7 +72,7 @@ namespace Lab6
             {
                 waiter.GatherDirtyGlasses(glassesOnTables);
                 waiter.CleanAndStoreGlasses(glassesInShelf);
-                if (pubClosing && allPatrons.IsEmpty && glassesOnTables.IsEmpty)
+                if (pubClosing && allPatrons.IsEmpty && glassesOnTables.IsEmpty && waiter.glassesCarried.IsEmpty)
                     break;
             }
             waiter.LogStatus("Waiter leaves the pub");

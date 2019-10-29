@@ -11,7 +11,7 @@ namespace Lab6
     public class Waiter : Agent
     {
         static public double DebugSpeed { get; set; }
-        ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
+        public ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
 
         public void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {

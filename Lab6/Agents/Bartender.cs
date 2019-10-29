@@ -26,7 +26,8 @@ namespace Lab6
                     Thread.Sleep(50);
                 }
             }
-            queueToBar.TryDequeue(out currentPatron);
+            if (currentPatron == null)
+                queueToBar.TryDequeue(out currentPatron);
             if (glassesInShelf.IsEmpty)
             {
                 LogStatus("Waiting for a clean glass");
@@ -56,6 +57,8 @@ namespace Lab6
                 return;
             LogStatus($"Pouring a beer for {currentPatron.GetName()}");
             Thread.Sleep((int)(3000 * simulationSpeed));
+            if (carriedGlass != null && currentPatron == null)
+                return;
             currentPatron.SetBeer(carriedGlass);
             carriedGlass = null;
             currentPatron = null;
@@ -70,6 +73,7 @@ namespace Lab6
         {
             if (carriedGlass != null)
                 glassesInShelf.Enqueue(carriedGlass);
+            LogStatus("Bartender cleans up the bar");
             UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
     }
