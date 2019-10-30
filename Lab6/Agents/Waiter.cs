@@ -10,10 +10,16 @@ namespace Lab6
 {
     public class Waiter : Agent
     {
+        private UIUpdater uiUpdater;
         static public double DebugSpeed { get; set; }
         public ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
         enum State { AwaitingWork, GatheringGlasses, WashingDishes, LeavingPub };
         State currentState = default;
+
+        public Waiter(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+        }
 
         public void Work(ConcurrentBag<Glass> glassesToGather, ConcurrentQueue<Glass> glassesInShelf, ConcurrentDictionary<int, Patron> allPatrons)
         {
@@ -50,7 +56,7 @@ namespace Lab6
         private void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {
             LogStatus("Gathering Glasses");
-            Thread.Sleep((int)((10000 * DebugSpeed) * simulationSpeed));
+            Thread.Sleep((int)((10000 * DebugSpeed) * SimulationSpeed));
             while (!glassesToGather.IsEmpty)
             {
                 glassesToGather.TryTake(out Glass toGather);
@@ -61,12 +67,12 @@ namespace Lab6
         private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesInShelf)
         {
             LogStatus("Washing and storing dishes");
-            Thread.Sleep((int)((15000 * DebugSpeed) * simulationSpeed));
+            Thread.Sleep((int)((15000 * DebugSpeed) * SimulationSpeed));
             while (!glassesCarried.IsEmpty)
             {
                 glassesCarried.TryTake(out Glass toStore);
-                glassesInShelf.Enqueue(toStore);
-                UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
+                glassesOnShelf.Enqueue(toStore);
+                uiUpdater.UpdateGlassesLabel(glassesOnShelf.Count());
             }
         }
 
@@ -79,7 +85,7 @@ namespace Lab6
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogWaiterAction(newStatus);
+            uiUpdater.LogWaiterAction(newStatus);
         }
 
         private void SetState(ConcurrentBag<Glass> glassesToGather, ConcurrentDictionary<int, Patron> allPatrons)

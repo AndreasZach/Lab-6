@@ -11,10 +11,16 @@ namespace Lab6
 {
     public class Bartender : Agent
     {
+        private UIUpdater uiUpdater;
         private Glass carriedGlass = null;
         private Patron currentPatron = null;
         enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
         State currentState = default;
+
+        public Bartender(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+        }
 
         public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
         {
@@ -63,6 +69,7 @@ namespace Lab6
         private void FetchGlass(ConcurrentQueue<Glass> glassesInShelf)
         {
             LogStatus("Fetching a glass");
+
             Thread.Sleep((int)(3000 * simulationSpeed));
             glassesInShelf.TryDequeue(out carriedGlass);
             UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
@@ -91,7 +98,7 @@ namespace Lab6
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogBartenderAction(newStatus);
+            uiUpdater.LogBartenderAction(newStatus);
         }
 
         private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
@@ -121,6 +128,5 @@ namespace Lab6
                 currentState = State.LeavingWork;
             }
         }
-
     }
 }

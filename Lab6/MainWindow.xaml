@@ -63,35 +63,6 @@
                  VerticalAlignment="Bottom"
                  Width="300"/>
 
-        <Button x:Name="PauseBartenderButton"
-                Content="Pause Bartender"
-                Grid.Column="1"
-                HorizontalAlignment="Center"
-                Margin="0,40,0,0" 
-                VerticalAlignment="Center" 
-                Width="100"
-                Height="30" IsEnabled="False"/>
-
-        <Button x:Name="PauseWaiterButton"
-                Content="Pause Waiter"
-                Grid.Column="1"
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                Margin="0,40,0,0" 
-                VerticalAlignment="Center" 
-                Width="100"
-                Height="30" IsEnabled="False"/>
-
-        <Button x:Name="PauseBouncerButton"
-                Content="Pause Bouncer"
-                Grid.Column="1"
-                Grid.Row="2"
-                HorizontalAlignment="Center"
-                Margin="0,40,0,0" 
-                VerticalAlignment="Center" 
-                Width="100"
-                Height="30" IsEnabled="False"/>
-
         <Label Content="&quot;Open hours&quot;"
                Grid.Column="2"
                Grid.Row="0"
@@ -154,7 +125,7 @@
                Margin="35,0,0,5"
                Width="150"
                VerticalAlignment="Bottom"/>
-        <Button x:Name="OpenCloseButton"
+        <Button x:Name="OpenPubButton"
             Content="Open Bar"
             Grid.Column="2"
             HorizontalAlignment="Center"

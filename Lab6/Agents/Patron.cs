@@ -10,6 +10,7 @@ namespace Lab6
 {
     public class Patron : Agent
     {
+        private UIUpdater uiUpdater;
         static public int DebugTimeToStay { get; set; }
         private int patronID;
         private string name;
@@ -20,12 +21,12 @@ namespace Lab6
         enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
         State currentState = default;
 
-        public Patron(string name, int ID)
+        public Patron(string name, int ID, UIUpdater uiUpdater)
         {
             this.name = name;
+            this.uiUpdater = uiUpdater;
             patronID = ID;
             LogStatus($"{name} enters the pub");
-
         }
 
         public void DrownSorrows(ConcurrentQueue<Patron> queueToBar, ConcurrentQueue<Patron> queueToChairs, ConcurrentQueue<Chair> availableChairs,
@@ -57,7 +58,7 @@ namespace Lab6
 
         private void GoToBar(ConcurrentQueue<Patron> queueToBar)
         {
-            Thread.Sleep((int)((1 * DebugTimeToStay) * simulationSpeed));
+            Thread.Sleep((int)((1 * DebugTimeToStay) * SimulationSpeed));
             queueToBar.Enqueue(this);
         }
 
@@ -72,14 +73,14 @@ namespace Lab6
         private void FindChair(ConcurrentQueue<Patron> queueToChair, ConcurrentQueue<Chair> availableChairs)
         {
             LogStatus($"{name} looks for an available chair"); 
-            Thread.Sleep((int)((4 * DebugTimeToStay) * simulationSpeed));
+            Thread.Sleep((int)((4 * DebugTimeToStay) * SimulationSpeed));
             queueToChair.Enqueue(this);
             while(availableChairs == null)
             {
                 Thread.Sleep(50);
             }
             availableChairs.TryDequeue(out chairUsed);
-            UIUpdater.UpdateChairLabel(availableChairs.Count());
+            uiUpdater.UpdateChairLabel(availableChairs.Count());
             _ = queueToChair.TryDequeue(out _);
         }
 
@@ -94,13 +95,13 @@ namespace Lab6
         {
             if(chairUsed != null)
                 availableChairs.Enqueue(chairUsed);
-            UIUpdater.UpdateChairLabel(availableChairs.Count());
+            uiUpdater.UpdateChairLabel(availableChairs.Count());
             chairUsed = null;
             glassesOnTables.Add(carriedBeer);
             carriedBeer = null;
             LogStatus($"{name} leaves the pub");
             allPatrons.TryRemove(patronID, out _);
-            UIUpdater.UpdatePatronLabel(allPatrons.Count());
+            uiUpdater.UpdatePatronLabel(allPatrons.Count());
             LeftPub = true;
         }
 
@@ -122,7 +123,7 @@ namespace Lab6
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogPatronAction(newStatus);
+            uiUpdater.LogPatronAction(newStatus);
         }
 
         private void SetState(ConcurrentQueue<Patron> queueToBar)

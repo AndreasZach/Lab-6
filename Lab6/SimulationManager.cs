@@ -16,7 +16,8 @@ namespace Lab6
         // TODO: Look at static members and classes, see what we can make more object-oriented.
         // TODO: Add a second window at the end of the sim that shows the user a message, then closes then program when the user clicks a button
 
-        Pub pubSimulation = new Pub();
+        public Pub pubSimulation;
+        public UIUpdater uiUpdater;
         public Dictionary<TestState, Action> stateHandlers = new Dictionary<TestState, Action>();
         public Dictionary<string, int> simSpeed = new Dictionary<string, int>
         {
@@ -24,6 +25,13 @@ namespace Lab6
             { "Speed: x2", 2 },
             { "Speed: x4", 4 }
         };
+
+        public SimulationManager()
+        {
+            uiUpdater = new UIUpdater();
+            pubSimulation = new Pub(uiUpdater);
+        }
+
         public enum TestState
         {
             Standard,
@@ -65,8 +73,7 @@ namespace Lab6
             });
             stateHandlers.Add(TestState.BusinessTimeIncrease, () => 
             {
-                // Sets the timer until Pub closes to 300 seconds, See App.xaml.cs/OpenCloseButton_Click for the code.
-                SetPubState();
+                SetPubState(pubTime: 300);
             });
             stateHandlers.Add(TestState.CouplesNight, () => 
             {
@@ -78,18 +85,20 @@ namespace Lab6
             });
         }
 
-        public void SetPubState(int glasses = 8, int chairs = 9, int patronStayTime = 1000, 
+        public void SetPubState(int pubTime = 120, int glasses = 8, int chairs = 9, int patronStayTime = 1000, 
             double waiterSpeed = 1.0, bool HappyHour = false, bool CouplesNight = false)
         {
+            Time.SimulationTime = pubTime;
             pubSimulation.SumAmountGlasses = glasses;
             pubSimulation.SumAmountChairs = chairs;
             Patron.DebugTimeToStay = patronStayTime;
             Waiter.DebugSpeed = waiterSpeed;
             Bouncer.HappyHour = HappyHour;
             Bouncer.CouplesNight = CouplesNight;
-            UIUpdater.UpdateGlassesLabel(pubSimulation.SumAmountGlasses);
-            UIUpdater.UpdateChairLabel(pubSimulation.SumAmountChairs);
-            UIUpdater.UpdatePatronLabel(pubSimulation.allPatrons.Count());
+            uiUpdater.UpdateGlassesLabel(pubSimulation.SumAmountGlasses);
+            uiUpdater.UpdateChairLabel(pubSimulation.SumAmountChairs);
+            uiUpdater.UpdatePatronLabel(pubSimulation.allPatrons.Count());
+            uiUpdater.UpdateCountDownLabel(Time.SimulationTime);
         }
 
         public void SetTestState(Object selectedState)
@@ -101,11 +110,23 @@ namespace Lab6
         public void SetSimulationSpeed(object selectedSpeed)
         {
             if (simSpeed[(string)selectedSpeed] == 2)
-                Agent.simulationSpeed = 0.5;
+            {
+                Agent.SimulationSpeed = 0.5;
+                Time.NewSimulationSpeed = 0.5;
+                Time.ChangePubHours();
+            }
             if (simSpeed[(string)selectedSpeed] == 4)
-                Agent.simulationSpeed = 0.25;
+            {
+                Agent.SimulationSpeed = 0.25;
+                Time.NewSimulationSpeed = 0.25;
+                Time.ChangePubHours();
+            }
             if (simSpeed[(string)selectedSpeed] != 2 && simSpeed[(string)selectedSpeed] != 4)
-                Agent.simulationSpeed = 1;
+            {
+                Agent.SimulationSpeed = 1;
+                Time.NewSimulationSpeed = 1;
+                Time.ChangePubHours();
+            }
         }
     }
 }

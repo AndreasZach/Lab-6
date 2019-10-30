@@ -10,10 +10,11 @@ namespace Lab6
 {
     public class Bouncer : Agent
     {
+        private UIUpdater uiUpdater;
         private int patronID = 0;
         private List<string> patronNames = new List<string> {
             "Anders", "Andreas", "Pontus", "Charlotte", "Tommy", "Petter", "Khosro", "Luna", "Nicklas", "Nils", "Robin",
-            "Alexander", "Andreé", "Andreea", "Daniel", "Elvis", "Emil", "Fredrik", "Johan", "John", "Jonas", "Karo",
+            "Alexander", "AndreÃ©", "Andreea", "Daniel", "Elvis", "Emil", "Fredrik", "Johan", "John", "Jonas", "Karo",
             "Simon", "Sofia", "Tijana", "Toni", "Wilhelm"
         };
         enum State { CheckingID, LeavingWork, HappyHour, CouplesNight };
@@ -24,6 +25,11 @@ namespace Lab6
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
 
+        public Bouncer(UIUpdater uiUpdater)
+        {
+            this.uiUpdater = uiUpdater;
+        }
+        
         public void Work(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
             while (!LeftPub)
@@ -86,10 +92,10 @@ namespace Lab6
         {
             string name = patronNames[RandomIntGenerator.GetRandomInt(0, (patronNames.Count() - 1))];
             patronID++;
-            Patron tempPatron = new Patron(name, patronID);
+            Patron tempPatron = new Patron(name, patronID, uiUpdater);
             createPatronTask(tempPatron);
             allPatrons.TryAdd(patronID, tempPatron);
-            UIUpdater.UpdatePatronLabel(allPatrons.Count());
+            uiUpdater.UpdatePatronLabel(allPatrons.Count());
         }
 
         private void LeavePub()
@@ -100,7 +106,7 @@ namespace Lab6
 
         public override void LogStatus(string newStatus)
         {
-            UIUpdater.LogPatronAction(newStatus);
+            uiUpdater.LogPatronAction(newStatus);
         }
 
         private void SetState()
