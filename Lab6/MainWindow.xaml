@@ -100,7 +100,7 @@
                Margin="0,5,0,0"
                VerticalAlignment="Top"/>
         <Label x:Name="CountDownLabel"
-               Content="120 s"
+               Content=""
                Grid.Column="2"
                Grid.Row="0"
                FontSize="20"
@@ -123,15 +123,13 @@
                   Margin="0,0,0,0" 
                   VerticalAlignment="Center" 
                   Width="120"/>
-        <Button x:Name="PauseBarButton"
-                Content="Pause bar"
+        <ComboBox x:Name="SpeedComboBox"
                 Grid.Column="2"
                 Grid.Row="1"
                 HorizontalAlignment="Center"
                 Margin="0,0,0,5" 
                 VerticalAlignment="Bottom" 
-                Width="140"
-                Height="30" IsEnabled="False"/>
+                Width="120"/>
         <Label x:Name="PatronLabel"
                Content="Patrons: " 
                Grid.Column="2"
@@ -141,7 +139,7 @@
                Width="150"
                VerticalAlignment="Bottom"/>
         <Label x:Name="ChairsLabel"
-               Content="Free chairs: 9" 
+               Content="Free chairs:" 
                Grid.Column="2"
                Grid.Row="2"
                FontSize="15"
@@ -149,7 +147,7 @@
                Width="150"
                VerticalAlignment="Bottom"/>
         <Label x:Name="GlasesLabel"
-               Content="Glases in bar: 8" 
+               Content="Glases in bar:" 
                Grid.Column="2"
                Grid.Row="2"
                FontSize="15"
@@ -163,6 +161,6 @@
             Margin="0,0,0,5" 
             VerticalAlignment="Bottom" 
             Width="140"
-            Height="30" />
+            Height="30" IsEnabled="False" />
     </Grid>
 </Window>

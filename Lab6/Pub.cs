@@ -7,77 +7,62 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    class Pub
+    public class Pub
     {
         bool pubClosing = false;
-        ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
+        public ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
+        public ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
+        public ConcurrentDictionary<int, Patron> allPatrons = new ConcurrentDictionary<int, Patron>();
         ConcurrentBag<Glass> glassesOnTables = new ConcurrentBag<Glass>();
-        ConcurrentBag<Chair> availableChairs = new ConcurrentBag<Chair>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
-        ConcurrentDictionary<int, Patron> allPatrons = new ConcurrentDictionary<int, Patron>();
         ConcurrentBag<Task> patronTasks = new ConcurrentBag<Task>();
 
-        public int SumAmountGlasses { get; set; } = 8;
-        public int SumAmountChairs { get; set; } = 9;
+        public int SumAmountGlasses { get; set; }
+        public int SumAmountChairs { get; set; }
 
         Bouncer bouncer = new Bouncer();
         Bartender bartender = new Bartender();
         Waiter waiter = new Waiter();
 
-        public void Run()
+        public void OpenPub()
         {
             GeneratePubItems();
+            Time.CountdownComplete += ClosePub;
             Task.Run(() => BouncerProcess()); 
             Task.Run(() => BartenderProcess());
             Task.Run(() => WaiterProcess());
         }
 
+        public void ClosePub()
+        {
+            pubClosing = true;
+            bartender.PubClosing = true;
+            bouncer.PubClosing = true;
+            waiter.PubClosing = true;
+        }
+
         public void BartenderProcess()
         {
-            while (!pubClosing && !allPatrons.IsEmpty)
-            {
-                bartender.Work(glassesInShelf, queueToBar);
-                bartender.FetchGlass();
-                bartender.ServeBeer();
-            }
-            bartender.SendStatusToLog("Bartender leaves the pub");
+            bartender.Work(glassesInShelf, queueToBar, allPatrons);
         }
 
         public void BouncerProcess()
         {
-            while(!pubClosing)
-            {
-                bouncer.AllowPatronEntry(allPatrons, PatronProcess);
-            }
-            bouncer.SendStatusToLog("Bouncer leaves the pub");
+            bouncer.Work(allPatrons, PatronProcess);
         }
 
         public void WaiterProcess()
-        {
-            while (!pubClosing && !allPatrons.IsEmpty && glassesOnTables.IsEmpty)
-            {
-                waiter.GatherDirtyGlasses(glassesOnTables);
-                waiter.CleanAndStoreGlasses(glassesInShelf);
-            }
-            waiter.SendStatusToLog("Waiter leaves the pub");
+        { 
+            waiter.Work(glassesOnTables, glassesInShelf, allPatrons);
         }
 
         public void PatronProcess(Patron patron)
         {
             patronTasks.Add(Task.Run(() => 
             {
-                patron.GoToBar(queueToBar);
-                patron.FindChair(queueToChairs, availableChairs);
-                patron.DrinkBeer();
-                patron.LeaveBar(allPatrons, availableChairs, glassesOnTables);
+                patron.DrownSorrows(queueToBar, queueToChairs, availableChairs, allPatrons, glassesOnTables);
             }));
-        }
-
-        public void ClosePub()
-        {
-            pubClosing = true;
-            bouncer.OnPubClosing();
         }
 
         public void GeneratePubItems()
@@ -88,7 +73,7 @@ namespace Lab6
             }
             for (int i = 0; i < SumAmountChairs; i++)
             {
-                availableChairs.Add(new Chair());
+                availableChairs.Enqueue(new Chair());
             }
         }
     }

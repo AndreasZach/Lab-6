@@ -9,6 +9,7 @@ namespace Lab6
 {
     public static class Time
     {
+        static public event Action CountdownComplete;
         private static DateTime openTime;
         private static DateTime closeTime;
         private static int countDown;
@@ -31,10 +32,12 @@ namespace Lab6
             {
                 while (countDown > 0 && !pubPaused)
                 {
-                    countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds;
-                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
-                    Task.Delay(200);
+                        countDown = (int)closeTime.Subtract(DateTime.Now).TotalSeconds ;
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
+                        Task.Delay(200);
                 }
+                pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
+                CountdownComplete();
             });
         }
 
