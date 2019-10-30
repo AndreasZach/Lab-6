@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lab6
 {
@@ -46,7 +43,9 @@ namespace Lab6
 
         public void Run()
         {
+            Time.SetPubHours();
             pubSimulation.OpenPub();
+            uiUpdater.StartTimer();
         }
 
         public void PopulateTestCollection()

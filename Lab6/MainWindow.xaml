@@ -9,6 +9,7 @@
         ResizeMode="NoResize"
         Height="450"
         Width="800">
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="12*" />
@@ -86,8 +87,18 @@
                HorizontalAlignment="Center"
                Margin="0,0,0,0"
                VerticalAlignment="Center"/>
+        <Button x:Name="OpenPubButton"
+                Content="Open Bar"
+                Grid.Column="2"
+                Grid.Row="0"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,5" 
+                VerticalAlignment="Bottom" 
+                Width="150"
+                Height="30"
+                IsEnabled="False"/>
 
-        <Label x:Name="TestStateLabel"
+        <Label x:Name="SimStateLabel"
                Content="Simulation State"
                Grid.Column="2"
                Grid.Row="1"
@@ -102,13 +113,22 @@
                   Margin="0,45,0,0" 
                   VerticalAlignment="Top" 
                   Width="150"/>
+        <Label x:Name="SpeedLabel"
+               Content="Simulation Speed"
+               Grid.Column="2"
+               Grid.Row="1"
+               FontSize="18"
+               HorizontalAlignment="Center"
+               Margin="0,0,0,30"
+               VerticalAlignment="Bottom"/>
         <ComboBox x:Name="SpeedComboBox"
-                Grid.Column="2"
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                Margin="0,0,0,5" 
-                VerticalAlignment="Bottom" 
-                Width="150"/>
+                  Grid.Column="2"
+                  Grid.Row="1"
+                  HorizontalAlignment="Center"
+                  Margin="0,0,0,5" 
+                  VerticalAlignment="Bottom" 
+                  Width="150"/>
+        
         <Label x:Name="PatronLabel"
                Content="Patrons: " 
                Grid.Column="2"
@@ -133,23 +153,5 @@
                Margin="35,0,0,20"
                Width="150"
                VerticalAlignment="Bottom"/>
-        <Button x:Name="OpenPubButton"
-            Content="Open Bar"
-            Grid.Column="2"
-            Grid.Row="0"
-            HorizontalAlignment="Center"
-            Margin="0,0,0,5" 
-            VerticalAlignment="Bottom" 
-            Width="150"
-            Height="30"
-            IsEnabled="False"/>
-        <Label x:Name="SpeedLabel_Copy"
-            Content="Simulation Speed"
-            Grid.Column="2"
-            Grid.Row="1"
-            FontSize="18"
-            HorizontalAlignment="Center"
-            Margin="0,0,0,30"
-            VerticalAlignment="Bottom"/>
     </Grid>
 </Window>
