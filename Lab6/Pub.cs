@@ -1,15 +1,10 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Lab6
 {
     public class Pub
     {
-        private UIUpdater uiUpdater;
         bool pubClosing = false;
         public ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
         public ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
@@ -24,7 +19,6 @@ namespace Lab6
 
         public Pub(UIUpdater uiUpdater)
         {
-            this.uiUpdater = uiUpdater;
             bouncer = new Bouncer(uiUpdater);
             bartender = new Bartender(uiUpdater);
             waiter = new Waiter(uiUpdater);

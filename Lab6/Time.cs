@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,7 +29,7 @@ namespace Lab6
             closeTime = DateTime.Now.AddMilliseconds((closeTime.Subtract(DateTime.Now).TotalMilliseconds) / oldSimulationSpeed * NewSimulationSpeed);
             oldSimulationSpeed = NewSimulationSpeed;
         }
-        public static void PrintCountdown(MainWindow pubWindow)
+        public static void Countdown(MainWindow pubWindow)
         {
             Task.Run(() =>
             {
