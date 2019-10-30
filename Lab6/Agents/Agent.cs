@@ -15,8 +15,8 @@ namespace Lab6
         public abstract void LogStatus(string status);
         protected void ActionDelay(double secondsDelay)
         {
-            double ActionTimeDelay = Time.countDown - secondsDelay;
-            while (Time.countDown > ActionTimeDelay)
+            double ActionTimeDelay = Time.countdown - secondsDelay;
+            while (Time.countdown > ActionTimeDelay)
             {
                 Thread.Sleep(100);
             }
