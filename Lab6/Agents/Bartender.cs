@@ -26,7 +26,7 @@ namespace Lab6
         {
             while (!LeftPub)
             {
-                SetState(glassesInShelf, queueToBar, allPatrons);
+                SetState(glassesInShelf, queueToBar);
                 switch (currentState)
                 {
                     case State.AwaitingPatron:
@@ -44,7 +44,7 @@ namespace Lab6
                         currentPatron = null;
                         break;
                     case State.LeavingWork:
-                        LeaveWork();
+                        CleanBarAndLeaveWork(allPatrons);
                         break;
                 }
             }
@@ -92,8 +92,13 @@ namespace Lab6
             currentPatron.SetBeer(carriedGlass);
         }
 
-        private void LeaveWork()
+        private void CleanBarAndLeaveWork(ConcurrentDictionary<int, Patron> allPatrons)
         {
+            LogStatus("Bartender cleans the bar");
+            while (!allPatrons.IsEmpty)
+            {
+                Thread.Sleep(50);
+            }
             LogStatus("Bartender leaves the pub");
             LeftPub = true;
         }
@@ -103,7 +108,7 @@ namespace Lab6
             uiUpdater.LogBartenderAction(newStatus);
         }
 
-        private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
+        private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
         {
             if (queueToBar.IsEmpty && PubClosing)
             {

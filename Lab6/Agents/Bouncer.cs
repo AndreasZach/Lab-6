@@ -20,7 +20,7 @@ namespace Lab6
         enum State { CheckingID, LeavingWork, HappyHour, CouplesNight };
         State currentState = default;
         private int minInterval = 3;
-        private int maxInterval = 11;
+        private int maxInterval = 10;
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
@@ -59,7 +59,7 @@ namespace Lab6
 
         private void HappyHourGeneratePatrons(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
-            double countdownUntilRegularEntry = Time.countdown - (RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * 2);
+            double countdownUntilRegularEntry = Time.countdown - (RandomNumberGenerator.GetRandomDouble(minInterval, (maxInterval + 1)) * 2);
             while (Time.countdown > countdownUntilRegularEntry)
             {
                 if (!completedHappyHourEvent && Time.countdown <= 100)
@@ -69,13 +69,9 @@ namespace Lab6
                     {
                         GeneratePatron(allPatrons, createPatronTask);
                     }
-                    
-                }
-                if (Time.countdown <= countdownUntilRegularEntry)
-                {
-                    GeneratePatron(allPatrons, createPatronTask);
                 }
             }
+            GeneratePatron(allPatrons, createPatronTask);
         }
 
         private void GeneratePatron(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
