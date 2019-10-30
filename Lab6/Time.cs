@@ -15,6 +15,8 @@ namespace Lab6
         private static double oldSimulationSpeed = 1;
         public static double countDown;
         private static string timeStamp;
+        private static double oldSimulationSpeed = 1;
+        
 
         public static double NewSimulationSpeed { get; set; }
         public static int SimulationTime { get; set; }
@@ -23,7 +25,7 @@ namespace Lab6
         {
             openTime = DateTime.Now;
             closeTime = openTime.AddSeconds(SimulationTime * NewSimulationSpeed);
-            countDown = SimulationTime;
+            countdown = SimulationTime;
         }
 
         public static void ChangePubHours()
@@ -35,21 +37,31 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                while (countDown > 0)
+                bool countdownSubZero = false;
+                while (true)
                 {
                     countDown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
-                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countDown} s");
+                    if (countdown >= 0)
+                    {
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countDown} s");
+                    }
+                    if (!countdownSubZero && countdown < 0)
+                    {
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
+                        CountdownComplete();
+                        countdownSubZero = true;
+                    }
                     Thread.Sleep(100);
                 }
-                pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
-                CountdownComplete();
             });
         }
 
         public static string GetTimeStamp()
         {
-            TimeSpan timeDiff = DateTime.Now.Subtract(openTime);
-            timeStamp = String.Format("{0:D2}.{1:D2}_", timeDiff.Minutes, timeDiff.Seconds);
+            int timeDiff = SimulationTime - countdown;
+            int minutes = timeDiff % 60;
+            int seconds = timeDiff - (minutes * 60);
+            timeStamp = String.Format("{0:D2}.{1:D2}", minutes, seconds);
             return timeStamp;
         }
     }
