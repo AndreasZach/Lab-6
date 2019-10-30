@@ -12,9 +12,10 @@ namespace Lab6
         static public event Action CountdownComplete;
         private static DateTime openTime;
         private static DateTime closeTime = DateTime.Now;
-        private static double oldSimulationSpeed = 1;
-        private static int countDown;
+        public static int countdown;
         private static string timeStamp;
+        private static double oldSimulationSpeed = 1;
+        
 
         public static double NewSimulationSpeed { get; set; }
         public static int SimulationTime { get; set; }
@@ -23,7 +24,7 @@ namespace Lab6
         {
             openTime = DateTime.Now;
             closeTime = openTime.AddSeconds(SimulationTime * NewSimulationSpeed);
-            countDown = SimulationTime;
+            countdown = SimulationTime;
         }
 
         public static void ChangePubHours()
@@ -35,21 +36,31 @@ namespace Lab6
         {
             Task.Run(() =>
             {
-                while (countDown > 0)
+                bool countdownSubZero = false;
+                while (true)
                 {
-                    countDown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
-                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
+                    countdown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
+                    if (countdown >= 0)
+                    {
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countdown} s");
+                    }
                     Thread.Sleep(100);
+                    if (!countdownSubZero && countdown < 0)
+                    {
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
+                        CountdownComplete();
+                        countdownSubZero = true;
+                    }
                 }
-                pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
-                CountdownComplete();
             });
         }
 
         public static string GetTimeStamp()
         {
-            TimeSpan timeDiff = DateTime.Now.Subtract(openTime);
-            timeStamp = String.Format("{0:D2}.{1:D2}_", timeDiff.Minutes, timeDiff.Seconds);
+            int timeDiff = SimulationTime - countdown;
+            int minutes = timeDiff % 60;
+            int seconds = timeDiff - (minutes * 60);
+            timeStamp = String.Format("{0:D2}.{1:D2}", minutes, seconds);
             return timeStamp;
         }
     }

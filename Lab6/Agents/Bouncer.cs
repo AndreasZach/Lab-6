@@ -68,7 +68,7 @@ namespace Lab6
             completedHappyHourEvent = true;
             Task.Run(() =>
             {
-                Thread.Sleep((int)(20000 * simulationSpeed));
+                Thread.Sleep((int)(20000 * SimulationSpeed));
                 for (int i = 0; i < 15; i++)
                 {
                     GeneratePatron(allPatrons, createPatronTask);
@@ -80,11 +80,11 @@ namespace Lab6
         {
             if (HappyHour)
             {
-                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(2000 * simulationSpeed));
+                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(2000 * SimulationSpeed));
             }
             else
             {
-                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * simulationSpeed));
+                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * SimulationSpeed));
             }
         }
 

@@ -70,9 +70,9 @@ namespace Lab6
         {
             LogStatus("Fetching a glass");
 
-            Thread.Sleep((int)(3000 * simulationSpeed));
+            Thread.Sleep((int)(3000 * SimulationSpeed));
             glassesInShelf.TryDequeue(out carriedGlass);
-            UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
+            uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
         private void PourBeer(ConcurrentQueue<Patron> queueToBar)
@@ -81,7 +81,7 @@ namespace Lab6
             if (currentPatron == null)
                 return;
             LogStatus($"Pouring a beer for {currentPatron.GetName()}");
-            Thread.Sleep((int)(3000 * simulationSpeed));
+            Thread.Sleep((int)(3000 * SimulationSpeed));
             carriedGlass.ContainsBeer = true;
             if (currentPatron == null)
                 return;

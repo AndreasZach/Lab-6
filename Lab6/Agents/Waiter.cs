@@ -71,8 +71,8 @@ namespace Lab6
             while (!glassesCarried.IsEmpty)
             {
                 glassesCarried.TryTake(out Glass toStore);
-                glassesOnShelf.Enqueue(toStore);
-                uiUpdater.UpdateGlassesLabel(glassesOnShelf.Count());
+                glassesInShelf.Enqueue(toStore);
+                uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
             }
         }
 

@@ -9,7 +9,7 @@ namespace Lab6
 {
     public abstract class Agent
     {
-        static public double simulationSpeed {get; set;}
+        static public double SimulationSpeed {get; set;}
         public bool PubClosing { get; set; } = false;
         public bool LeftPub { get; internal set; } = false;
         public abstract void LogStatus(string status);

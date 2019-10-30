@@ -87,7 +87,7 @@ namespace Lab6
         private void DrinkBeer()
         {
             LogStatus($"{name} sits down and drinks their beer");
-            Thread.Sleep((int)((RandomIntGenerator.GetRandomInt(minInterval, maxInterval) * DebugTimeToStay) * simulationSpeed));
+            Thread.Sleep((int)((RandomIntGenerator.GetRandomInt(minInterval, maxInterval) * DebugTimeToStay) * SimulationSpeed));
             carriedBeer.ContainsBeer = false;
         }
 
