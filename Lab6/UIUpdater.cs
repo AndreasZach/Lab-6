@@ -22,12 +22,12 @@ namespace Lab6
 
         public void UpdateChairLabel(int availableChairs)
         {
-            window.Dispatcher.Invoke(() => window.ChairsLabel.Content = $"Chairs: {availableChairs}");
+            window.Dispatcher.Invoke(() => window.ChairsLabel.Content = $"Free chairs: {availableChairs}");
         }
 
         public void UpdateGlassesLabel(int availableGlasses)
         {
-            window.Dispatcher.Invoke(() => window.GlasesLabel.Content = $"Glasses: {availableGlasses}");
+            window.Dispatcher.Invoke(() => window.GlasesLabel.Content = $"Clean glasses: {availableGlasses}");
         }
 
         public void UpdateCountDownLabel(int testStateTime)

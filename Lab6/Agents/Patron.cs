@@ -82,7 +82,7 @@ namespace Lab6
 
         private void DrinkBeer()
         {
-            LogStatus($"{name} sits down and drinks their beer");
+            LogStatus($"{name} sits down and drinks the beer");
             ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * DebugTimeToStay);
             carriedBeer.ContainsBeer = false;
         }
