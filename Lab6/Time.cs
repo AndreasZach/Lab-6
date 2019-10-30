@@ -13,9 +13,8 @@ namespace Lab6
         private static DateTime openTime;
         private static DateTime closeTime = DateTime.Now;
         private static double oldSimulationSpeed = 1;
-        public static double countDown;
+        public static double countdown;
         private static string timeStamp;
-        private static double oldSimulationSpeed = 1;
         
 
         public static double NewSimulationSpeed { get; set; }
@@ -40,10 +39,10 @@ namespace Lab6
                 bool countdownSubZero = false;
                 while (true)
                 {
-                    countDown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
+                    countdown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
                     if (countdown >= 0)
                     {
-                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countDown} s");
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countdown} s");
                     }
                     if (!countdownSubZero && countdown < 0)
                     {
@@ -58,8 +57,8 @@ namespace Lab6
 
         public static string GetTimeStamp()
         {
-            int timeDiff = SimulationTime - countdown;
-            int minutes = timeDiff % 60;
+            int timeDiff = (int)(SimulationTime - countdown);
+            int minutes = timeDiff / 60;
             int seconds = timeDiff - (minutes * 60);
             timeStamp = String.Format("{0:D2}.{1:D2}", minutes, seconds);
             return timeStamp;

@@ -64,7 +64,7 @@ namespace Lab6
             }
         }
 
-        private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesOnShelf)
+        private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesInShelf)
         {
             LogStatus("Washing and storing dishes");
             ActionDelay(15);

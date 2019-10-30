@@ -24,7 +24,7 @@ namespace Lab6
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
-        double countdownUntilEvent = Time.countDown - 20;
+        double countdownUntilEvent = Time.countdown - 20;
 
         public Bouncer(UIUpdater uiUpdater)
         {
@@ -62,14 +62,14 @@ namespace Lab6
 
         private void HappyHourGeneratePatrons(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
-            double countdownUntilRegularEntry = Time.countDown - (RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * 2);
+            double countdownUntilRegularEntry = Time.countdown - (RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * 2);
             while (countdownUntilRegularEntry > 0)
             {
                 Thread.Sleep(100);
                 if (!completedHappyHourEvent)
                     countdownUntilRegularEntry -= 100 * SimulationSpeed;
                 countdownUntilEvent -= 100 * SimulationSpeed;
-                if (!completedHappyHourEvent && Time.countDown <= countdownUntilEvent)
+                if (!completedHappyHourEvent && Time.countdown <= countdownUntilEvent)
                 {
                     for (int i = 0; i < 15; i++)
                     {
@@ -77,7 +77,7 @@ namespace Lab6
                     }
                     completedHappyHourEvent = true;
                 }
-                if (Time.countDown <= countdownUntilRegularEntry)
+                if (Time.countdown <= countdownUntilRegularEntry)
                 {
                     GeneratePatron(allPatrons, createPatronTask);
                 }
