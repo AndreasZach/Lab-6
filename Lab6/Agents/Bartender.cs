@@ -40,6 +40,8 @@ namespace Lab6
                         break;
                     case State.PouringBeer:
                         PourBeer(queueToBar);
+                        carriedGlass = null;
+                        currentPatron = null;
                         break;
                     case State.LeavingWork:
                         LeaveWork();
@@ -71,23 +73,23 @@ namespace Lab6
             LogStatus("Fetching a glass");
 
             ActionDelay(3);
-            glassesInShelf.TryDequeue(out carriedGlass);
+            while (carriedGlass == null)
+            {
+                glassesInShelf.TryDequeue(out carriedGlass);
+            }
             uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
         private void PourBeer(ConcurrentQueue<Patron> queueToBar)
         {
-            queueToBar.TryDequeue(out currentPatron);
-            if (currentPatron == null)
-                return;
+            while (currentPatron == null)
+            {
+                queueToBar.TryDequeue(out currentPatron);
+            }
             LogStatus($"Pouring a beer for {currentPatron.GetName()}");
             ActionDelay(3);
             carriedGlass.ContainsBeer = true;
-            if (currentPatron == null)
-                return;
             currentPatron.SetBeer(carriedGlass);
-            carriedGlass = null;
-            currentPatron = null;
         }
 
         private void LeaveWork()
@@ -103,12 +105,16 @@ namespace Lab6
 
         private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
         {
-            if (currentState == State.FetchingGlass)
+            if (allPatrons.IsEmpty && PubClosing)
+            {
+                currentState = State.LeavingWork;
+            }
+            if (currentState == State.FetchingGlass && carriedGlass != null)
             {
                 currentState = State.PouringBeer;
                 return;
             }
-            if (!queueToBar.IsEmpty && !glassesInShelf.IsEmpty && carriedGlass == null)
+            if (!queueToBar.IsEmpty && !glassesInShelf.IsEmpty)
             {
                 currentState = State.FetchingGlass;
                 return;
@@ -122,10 +128,6 @@ namespace Lab6
             {
                 currentState = State.AwaitingGlass;
                 return;
-            }
-            if (allPatrons.IsEmpty && PubClosing)
-            {
-                currentState = State.LeavingWork;
             }
         }
     }

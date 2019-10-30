@@ -24,8 +24,6 @@ namespace Lab6
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
-        double countdownUntilEvent = Time.countDown - 20;
-
         public Bouncer(UIUpdater uiUpdater)
         {
             this.uiUpdater = uiUpdater;
@@ -47,7 +45,6 @@ namespace Lab6
                         break;
                     case State.HappyHour:
                         HappyHourGeneratePatrons(allPatrons, createPatronTask);
-                        GeneratePatron(allPatrons, createPatronTask);
                         break;
                     case State.CouplesNight:
                         ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval));
@@ -62,22 +59,19 @@ namespace Lab6
 
         private void HappyHourGeneratePatrons(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
-            double countdownUntilRegularEntry = Time.countDown - (RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * 2);
-            while (countdownUntilRegularEntry > 0)
+            double countdownUntilRegularEntry = Time.countdown - (RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * 2);
+            while (Time.countdown > countdownUntilRegularEntry)
             {
-                Thread.Sleep(100);
-                if (!completedHappyHourEvent)
-                    countdownUntilRegularEntry -= 100 * SimulationSpeed;
-                countdownUntilEvent -= 100 * SimulationSpeed;
-                if (!completedHappyHourEvent && Time.countDown <= countdownUntilEvent)
+                if (!completedHappyHourEvent && Time.countdown <= 100)
                 {
+                    completedHappyHourEvent = true;
                     for (int i = 0; i < 15; i++)
                     {
                         GeneratePatron(allPatrons, createPatronTask);
                     }
-                    completedHappyHourEvent = true;
+                    
                 }
-                if (Time.countDown <= countdownUntilRegularEntry)
+                if (Time.countdown <= countdownUntilRegularEntry)
                 {
                     GeneratePatron(allPatrons, createPatronTask);
                 }
