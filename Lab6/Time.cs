@@ -58,7 +58,7 @@ namespace Lab6
         public static string GetTimeStamp()
         {
             int timeDiff = (int)(SimulationTime - countdown);
-            int minutes = timeDiff % 60;
+            int minutes = timeDiff / 60;
             int seconds = timeDiff - (minutes * 60);
             timeStamp = String.Format("{0:D2}.{1:D2}", minutes, seconds);
             return timeStamp;
