@@ -105,7 +105,7 @@ namespace Lab6
 
         private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
         {
-            if (allPatrons.IsEmpty && PubClosing)
+            if (queueToBar.IsEmpty && PubClosing)
             {
                 currentState = State.LeavingWork;
             }
