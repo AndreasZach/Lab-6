@@ -14,57 +14,86 @@ namespace Lab6
         private UIUpdater uiUpdater;
         private Glass carriedGlass = null;
         private Patron currentPatron = null;
+        enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
+        State currentState = default;
 
         public Bartender(UIUpdater uiUpdater)
         {
             this.uiUpdater = uiUpdater;
         }
 
-        public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
+        public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
         {
-            if (queueToBar.IsEmpty && EndWork)
-                return;
-            if (queueToBar.IsEmpty)
+            while (!LeftPub)
             {
-                LogStatus("Waiting for patron");
-                while (queueToBar.IsEmpty && !EndWork)
+                SetState(glassesInShelf, queueToBar, allPatrons);
+                switch (currentState)
                 {
-                    Thread.Sleep(50);
+                    case State.AwaitingPatron:
+                        WaitForPatron(queueToBar);
+                        break;
+                    case State.AwaitingGlass:
+                        WaitForGlass(glassesInShelf);
+                        break;
+                    case State.FetchingGlass:
+                        FetchGlass(glassesInShelf);
+                        break;
+                    case State.PouringBeer:
+                        PourBeer(queueToBar);
+                        break;
+                    case State.LeavingWork:
+                        LeaveWork();
+                        break;
                 }
             }
-            queueToBar.TryDequeue(out currentPatron);
-            if (glassesInShelf.IsEmpty)
-            {
-                LogStatus("Waiting for a clean glass");
-                while (glassesInShelf.IsEmpty)
-                {
-                    Thread.Sleep(50);
-                }
-            }
-            if (carriedGlass == null)
-                glassesInShelf.TryDequeue(out carriedGlass);
-            uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
-        public void FetchGlass()
+        private void WaitForPatron(ConcurrentQueue<Patron> queueToBar)
         {
-            if (EndWork)
-                return;
+            LogStatus("Waiting for Patron");
+            while (queueToBar.IsEmpty)
+            {
+                Thread.Sleep(50);
+            }
+        }
+
+        private void WaitForGlass(ConcurrentQueue<Glass> glassesInShelf)
+        {
+            LogStatus("Waiting for a clean glass");
+            while (glassesInShelf.IsEmpty)
+            {
+                Thread.Sleep(50);
+            }
+        }
+
+        private void FetchGlass(ConcurrentQueue<Glass> glassesInShelf)
+        {
             LogStatus("Fetching a glass");
-            Thread.Sleep((int)(3000 * SimulationSpeed));
+
+            Thread.Sleep((int)(3000 * simulationSpeed));
+            glassesInShelf.TryDequeue(out carriedGlass);
+            UIUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
-        public void ServeBeer()
+        private void PourBeer(ConcurrentQueue<Patron> queueToBar)
         {
-            if (EndWork)
-                return;
+            queueToBar.TryDequeue(out currentPatron);
             if (currentPatron == null)
                 return;
             LogStatus($"Pouring a beer for {currentPatron.GetName()}");
-            Thread.Sleep((int)(3000 * SimulationSpeed));
+            Thread.Sleep((int)(3000 * simulationSpeed));
+            carriedGlass.ContainsBeer = true;
+            if (currentPatron == null)
+                return;
             currentPatron.SetBeer(carriedGlass);
             carriedGlass = null;
             currentPatron = null;
+        }
+
+        private void LeaveWork()
+        {
+            LogStatus("Bartender leaves the pub");
+            LeftPub = true;
         }
 
         public override void LogStatus(string newStatus)
@@ -72,11 +101,32 @@ namespace Lab6
             uiUpdater.LogBartenderAction(newStatus);
         }
 
-        public void CleanUp(ConcurrentQueue<Glass> glassesInShelf)
+        private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
         {
-            if (carriedGlass != null)
-                glassesInShelf.Enqueue(carriedGlass);
-            uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
+            if (currentState == State.FetchingGlass)
+            {
+                currentState = State.PouringBeer;
+                return;
+            }
+            if (!queueToBar.IsEmpty && !glassesInShelf.IsEmpty && carriedGlass == null)
+            {
+                currentState = State.FetchingGlass;
+                return;
+            }
+            if (queueToBar.IsEmpty && !PubClosing)
+            {
+                currentState = State.AwaitingPatron;
+                return;
+            }
+            if (glassesInShelf.IsEmpty && !queueToBar.IsEmpty)
+            {
+                currentState = State.AwaitingGlass;
+                return;
+            }
+            if (allPatrons.IsEmpty && PubClosing)
+            {
+                currentState = State.LeavingWork;
+            }
         }
     }
 }

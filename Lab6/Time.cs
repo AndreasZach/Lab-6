@@ -37,7 +37,6 @@ namespace Lab6
             {
                 while (countDown > 0)
                 {
-
                     countDown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
                     pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
                     Thread.Sleep(100);

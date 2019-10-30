@@ -11,8 +11,10 @@ namespace Lab6
     {
 
         // TODO: Clean up any sloppy code. Make the code more object oriented. (Looking at you, Bouncer class...).
-        // TODO: Make the Time class able to fast forward the countdown, in sync with the Speed setting.
+        // TODO: Make the Time class able to fast forward the countdown, in sync with the Speed setting. (Use a timer with 1000ms tick, that loops until)
+        // all Agents have left the pub?
         // TODO: Look at static members and classes, see what we can make more object-oriented.
+        // TODO: Add a second window at the end of the sim that shows the user a message, then closes then program when the user clicks a button
 
         public Pub pubSimulation;
         public UIUpdater uiUpdater;
