@@ -21,7 +21,7 @@ namespace Lab6
             this.uiUpdater = uiUpdater;
         }
 
-        public void Work(ConcurrentBag<Glass> glassesToGather, ConcurrentQueue<Glass> glassesInShelf, ConcurrentDictionary<int, Patron> allPatrons)
+        public void Work(ConcurrentBag<Glass> glassesToGather, ConcurrentQueue<Glass> glassesOnShelf, ConcurrentDictionary<int, Patron> allPatrons)
         {
             while (!LeftPub)
             {
@@ -35,7 +35,7 @@ namespace Lab6
                         GatherDirtyGlasses(glassesToGather);
                         break;
                     case State.WashingDishes:
-                        CleanAndStoreGlasses(glassesInShelf);
+                        CleanAndStoreGlasses(glassesOnShelf);
                         break;
                     case State.LeavingPub:
                         LeavePub();
@@ -56,7 +56,7 @@ namespace Lab6
         private void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {
             LogStatus("Gathering Glasses");
-            Thread.Sleep((int)((10000 * DebugSpeed) * SimulationSpeed));
+            ActionDelay(10);
             while (!glassesToGather.IsEmpty)
             {
                 glassesToGather.TryTake(out Glass toGather);
@@ -64,10 +64,10 @@ namespace Lab6
             }
         }
 
-        private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesInShelf)
+        private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesOnShelf)
         {
             LogStatus("Washing and storing dishes");
-            Thread.Sleep((int)((15000 * DebugSpeed) * SimulationSpeed));
+            ActionDelay(15);
             while (!glassesCarried.IsEmpty)
             {
                 glassesCarried.TryTake(out Glass toStore);
@@ -81,7 +81,6 @@ namespace Lab6
             LogStatus("Waiter Leaves the pub");
             LeftPub = true;
         }
-        
 
         public override void LogStatus(string newStatus)
         {

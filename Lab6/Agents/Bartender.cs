@@ -70,7 +70,7 @@ namespace Lab6
         {
             LogStatus("Fetching a glass");
 
-            Thread.Sleep((int)(3000 * SimulationSpeed));
+            ActionDelay(3);
             glassesInShelf.TryDequeue(out carriedGlass);
             uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
@@ -81,7 +81,7 @@ namespace Lab6
             if (currentPatron == null)
                 return;
             LogStatus($"Pouring a beer for {currentPatron.GetName()}");
-            Thread.Sleep((int)(3000 * SimulationSpeed));
+            ActionDelay(3);
             carriedGlass.ContainsBeer = true;
             if (currentPatron == null)
                 return;

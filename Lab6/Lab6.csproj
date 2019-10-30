@@ -62,7 +62,7 @@
     <Compile Include="Agents\Waiter.cs" />
     <Compile Include="Pub.cs" />
     <Compile Include="PubItems\PubItem.cs" />
-    <Compile Include="RandomIntGenerator.cs" />
+    <Compile Include="RandomNumberGenerator.cs" />
     <Compile Include="SimulationManager.cs" />
     <Compile Include="Time.cs" />
     <Compile Include="UIUpdater.cs" />

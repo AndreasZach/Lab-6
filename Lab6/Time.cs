@@ -12,7 +12,8 @@ namespace Lab6
         static public event Action CountdownComplete;
         private static DateTime openTime;
         private static DateTime closeTime = DateTime.Now;
-        public static int countdown;
+        private static double oldSimulationSpeed = 1;
+        public static double countDown;
         private static string timeStamp;
         private static double oldSimulationSpeed = 1;
         
@@ -39,18 +40,18 @@ namespace Lab6
                 bool countdownSubZero = false;
                 while (true)
                 {
-                    countdown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
+                    countDown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
                     if (countdown >= 0)
                     {
-                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countdown} s");
+                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countDown} s");
                     }
-                    Thread.Sleep(100);
                     if (!countdownSubZero && countdown < 0)
                     {
                         pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
                         CountdownComplete();
                         countdownSubZero = true;
                     }
+                    Thread.Sleep(100);
                 }
             });
         }
