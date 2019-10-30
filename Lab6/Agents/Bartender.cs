@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Concurrent;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Lab6
 {
@@ -26,7 +21,7 @@ namespace Lab6
         {
             while (!LeftPub)
             {
-                SetState(glassesInShelf, queueToBar, allPatrons);
+                SetState(glassesInShelf, queueToBar);
                 switch (currentState)
                 {
                     case State.AwaitingPatron:
@@ -103,7 +98,7 @@ namespace Lab6
             uiUpdater.LogBartenderAction(newStatus);
         }
 
-        private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
+        private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
         {
             if (queueToBar.IsEmpty && PubClosing)
             {

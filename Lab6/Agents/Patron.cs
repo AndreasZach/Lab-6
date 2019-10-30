@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Lab6
 {
@@ -86,7 +82,7 @@ namespace Lab6
 
         private void DrinkBeer()
         {
-            LogStatus($"{name} sits down and drinks their beer");
+            LogStatus($"{name} sits down and drinks the beer");
             ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * DebugTimeToStay);
             carriedBeer.ContainsBeer = false;
         }

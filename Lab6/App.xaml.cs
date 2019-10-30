@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 
 namespace Lab6
@@ -54,9 +49,7 @@ namespace Lab6
         {
             window.SimStateComboBox.IsEnabled = false;
             window.OpenPubButton.IsEnabled = false;
-            Time.SetPubHours();
             simManager.Run();
-            Time.PrintCountdown(window);
         }
     }
 }
