@@ -34,7 +34,7 @@ namespace Lab6
                 switch (currentState)
                 {
                     case State.CheckingID:
-                        ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval));
+                        ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval), bouncer: this);
                         GeneratePatron(allPatrons, createPatronTask);
                         break;
                     case State.LeavingWork:
@@ -44,7 +44,7 @@ namespace Lab6
                         HappyHourGeneratePatrons(allPatrons, createPatronTask);
                         break;
                     case State.CouplesNight:
-                        ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval));
+                        ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval), bouncer: this);
                         for (int i = 0; i < 2; i++)
                         {
                             GeneratePatron(allPatrons, createPatronTask);
@@ -59,6 +59,8 @@ namespace Lab6
             double countdownUntilRegularEntry = Time.countdown - (RandomNumberGenerator.GetRandomDouble(minInterval, (maxInterval + 1)) * 2);
             while (Time.countdown > countdownUntilRegularEntry)
             {
+                if (PubClosing)
+                    break;
                 if (!completedHappyHourEvent && Time.countdown <= 100)
                 {
                     completedHappyHourEvent = true;
@@ -73,6 +75,8 @@ namespace Lab6
 
         private void GeneratePatron(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
+            if (PubClosing)
+                return;
             string name = patronNames[(int)RandomNumberGenerator.GetRandomDouble(0, (patronNames.Count() - 1))];
             patronID++;
             Patron tempPatron = new Patron(name, patronID, uiUpdater);

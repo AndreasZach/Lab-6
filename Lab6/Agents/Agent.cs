@@ -8,11 +8,13 @@ namespace Lab6
         public bool PubClosing { get; set; } = false;
         public bool LeftPub { get; protected set; } = false;
         public abstract void LogStatus(string status);
-        protected void ActionDelay(double secondsDelay)
+        protected void ActionDelay(double secondsDelay, Bouncer bouncer = null)
         {
             double ActionTimeDelay = Time.countdown - secondsDelay;
             while (Time.countdown > ActionTimeDelay)
             {
+                if (bouncer != null && PubClosing)
+                    return;
                 Thread.Sleep(100);
             }
         }
