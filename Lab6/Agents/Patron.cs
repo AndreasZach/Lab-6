@@ -58,7 +58,7 @@ namespace Lab6
 
         private void GoToBar(ConcurrentQueue<Patron> queueToBar)
         {
-            Thread.Sleep((int)((1 * DebugTimeToStay) * SimulationSpeed));
+            ActionDelay(1);
             queueToBar.Enqueue(this);
         }
 
@@ -72,8 +72,8 @@ namespace Lab6
 
         private void FindChair(ConcurrentQueue<Patron> queueToChair, ConcurrentQueue<Chair> availableChairs)
         {
-            LogStatus($"{name} looks for an available chair"); 
-            Thread.Sleep((int)((4 * DebugTimeToStay) * SimulationSpeed));
+            LogStatus($"{name} looks for an available chair");
+            ActionDelay(4);
             queueToChair.Enqueue(this);
             while(availableChairs == null)
             {
@@ -87,7 +87,7 @@ namespace Lab6
         private void DrinkBeer()
         {
             LogStatus($"{name} sits down and drinks their beer");
-            Thread.Sleep((int)((RandomIntGenerator.GetRandomInt(minInterval, maxInterval) * DebugTimeToStay) * simulationSpeed));
+            ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * DebugTimeToStay);
             carriedBeer.ContainsBeer = false;
         }
 
@@ -119,7 +119,6 @@ namespace Lab6
         {
             carriedBeer = beer;
         }
-        
 
         public override void LogStatus(string newStatus)
         {

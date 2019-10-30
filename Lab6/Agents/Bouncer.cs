@@ -24,6 +24,7 @@ namespace Lab6
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
+        double countdownUntilEvent = Time.countDown - 20;
 
         public Bouncer(UIUpdater uiUpdater)
         {
@@ -38,22 +39,18 @@ namespace Lab6
                 switch (currentState)
                 {
                     case State.CheckingID:
-                        PatronEntryInterval();
+                        ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval));
                         GeneratePatron(allPatrons, createPatronTask);
                         break;
                     case State.LeavingWork:
                         LeavePub();
                         break;
                     case State.HappyHour:
-                        if (!completedHappyHourEvent)
-                        {
-                            HappyHourEvent(allPatrons, createPatronTask);
-                        }
-                        PatronEntryInterval();
+                        HappyHourGeneratePatrons(allPatrons, createPatronTask);
                         GeneratePatron(allPatrons, createPatronTask);
                         break;
                     case State.CouplesNight:
-                        PatronEntryInterval();
+                        ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval));
                         for (int i = 0; i < 2; i++)
                         {
                             GeneratePatron(allPatrons, createPatronTask);
@@ -63,34 +60,33 @@ namespace Lab6
             }
         }
 
-        private void HappyHourEvent(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
+        private void HappyHourGeneratePatrons(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
-            completedHappyHourEvent = true;
-            Task.Run(() =>
+            double countdownUntilRegularEntry = Time.countDown - (RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * 2);
+            while (countdownUntilRegularEntry > 0)
             {
-                Thread.Sleep((int)(20000 * simulationSpeed));
-                for (int i = 0; i < 15; i++)
+                Thread.Sleep(100);
+                if (!completedHappyHourEvent)
+                    countdownUntilRegularEntry -= 100 * SimulationSpeed;
+                countdownUntilEvent -= 100 * SimulationSpeed;
+                if (!completedHappyHourEvent && Time.countDown <= countdownUntilEvent)
+                {
+                    for (int i = 0; i < 15; i++)
+                    {
+                        GeneratePatron(allPatrons, createPatronTask);
+                    }
+                    completedHappyHourEvent = true;
+                }
+                if (Time.countDown <= countdownUntilRegularEntry)
                 {
                     GeneratePatron(allPatrons, createPatronTask);
                 }
-            });
-        }
-
-        private void PatronEntryInterval()
-        {
-            if (HappyHour)
-            {
-                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(2000 * simulationSpeed));
-            }
-            else
-            {
-                Thread.Sleep((RandomIntGenerator.GetRandomInt(minInterval, maxInterval)) * (int)(1000 * simulationSpeed));
             }
         }
 
         private void GeneratePatron(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
         {
-            string name = patronNames[RandomIntGenerator.GetRandomInt(0, (patronNames.Count() - 1))];
+            string name = patronNames[(int)RandomNumberGenerator.GetRandomDouble(0, (patronNames.Count() - 1))];
             patronID++;
             Patron tempPatron = new Patron(name, patronID, uiUpdater);
             createPatronTask(tempPatron);

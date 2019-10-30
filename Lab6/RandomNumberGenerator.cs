@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Lab6
 {
-    public static class RandomIntGenerator
+    public static class RandomNumberGenerator
     {
         private static Random randomGenerator = new Random();
 
-        public static int GetRandomInt(int from, int to)
+        public static double GetRandomDouble(int from, int to)
         {
-            int randomInt = randomGenerator.Next(from, to);
-            return randomInt;
+            double randomDouble = randomGenerator.Next(from, to);
+            return randomDouble;
         }
     }
 }

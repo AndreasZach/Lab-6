@@ -65,7 +65,7 @@ namespace Lab6
             });
             stateHandlers.Add(TestState.PatronDoubleStay, () => 
             {
-                SetPubState(patronStayTime: 2000);
+                SetPubState(patronStayTime: 2);
             });
             stateHandlers.Add(TestState.TurboWaiter, () => 
             {
@@ -85,7 +85,7 @@ namespace Lab6
             });
         }
 
-        public void SetPubState(int pubTime = 120, int glasses = 8, int chairs = 9, int patronStayTime = 1000, 
+        public void SetPubState(int pubTime = 120, int glasses = 8, int chairs = 9, int patronStayTime = 1, 
             double waiterSpeed = 1.0, bool HappyHour = false, bool CouplesNight = false)
         {
             Time.SimulationTime = pubTime;

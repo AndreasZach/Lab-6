@@ -13,7 +13,7 @@ namespace Lab6
         private static DateTime openTime;
         private static DateTime closeTime = DateTime.Now;
         private static double oldSimulationSpeed = 1;
-        private static int countDown;
+        public static double countDown;
         private static string timeStamp;
 
         public static double NewSimulationSpeed { get; set; }
@@ -37,8 +37,8 @@ namespace Lab6
             {
                 while (countDown > 0)
                 {
-                    countDown = (int)(closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
-                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{countDown} s");
+                    countDown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
+                    pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countDown} s");
                     Thread.Sleep(100);
                 }
                 pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
