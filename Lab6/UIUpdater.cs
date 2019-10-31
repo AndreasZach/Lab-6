@@ -1,9 +1,11 @@
 ﻿
+using System.Windows;
+
 namespace Lab6
 {
     public class UIUpdater
     {
-        static private MainWindow window;
+        private MainWindow window;
 
         public void InitializeUpdater(MainWindow uiWindow)
         {
@@ -60,6 +62,11 @@ namespace Lab6
                 window.PatronLisBox.Items.Insert(0, $"<{Time.GetTimeStamp()}> {action}");
                 window.PatronLisBox.Items.Refresh();
             });
+        }
+
+        public void ShowEndMessage()
+        {
+            MessageBox.Show("Pub is now closed,\nget out Pontus!", "Waiter:");
         }
     }
 }

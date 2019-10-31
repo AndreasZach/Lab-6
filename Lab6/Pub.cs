@@ -1,14 +1,16 @@
+using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Lab6
 {
     public class Pub
     {
-        bool pubClosing = false;
-        public ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
-        public ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
-        public ConcurrentDictionary<int, Patron> allPatrons = new ConcurrentDictionary<int, Patron>();
+        private UIUpdater uiUpdater;
+        ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
+        ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
+        ConcurrentDictionary<int, Patron> allPatrons = new ConcurrentDictionary<int, Patron>();
         ConcurrentBag<Glass> glassesOnTables = new ConcurrentBag<Glass>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
@@ -19,9 +21,10 @@ namespace Lab6
 
         public Pub(UIUpdater uiUpdater)
         {
-            bouncer = new Bouncer(uiUpdater);
-            bartender = new Bartender(uiUpdater);
-            waiter = new Waiter(uiUpdater);
+            this.uiUpdater = uiUpdater;
+            bouncer = new Bouncer(uiUpdater, allPatrons, PatronProcess);
+            bartender = new Bartender(uiUpdater, glassesInShelf, queueToBar, allPatrons);
+            waiter = new Waiter(uiUpdater, glassesInShelf, glassesOnTables, allPatrons);
         }
 
         public int SumAmountGlasses { get; set; }
@@ -38,32 +41,44 @@ namespace Lab6
 
         public void ClosePub()
         {
-            pubClosing = true;
             bartender.PubClosing = true;
             bouncer.PubClosing = true;
             waiter.PubClosing = true;
+            Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (bartender.LeftPub && waiter.LeftPub && bouncer.LeftPub)
+                    {
+                        Time.StopCountdown = true;
+                        uiUpdater.ShowEndMessage();
+                        break;
+                    }
+                    Thread.Sleep(1000);
+                }
+            });
         }
 
         public void BartenderProcess()
         {
-            bartender.Work(glassesInShelf, queueToBar, allPatrons);
+            bartender.Work();
         }
 
         public void BouncerProcess()
         {
-            bouncer.Work(allPatrons, PatronProcess);
+            bouncer.Work();
         }
 
         public void WaiterProcess()
         { 
-            waiter.Work(glassesOnTables, glassesInShelf, allPatrons);
+            waiter.Work();
         }
 
         public void PatronProcess(Patron patron)
         {
             patronTasks.Add(Task.Run(() => 
             {
-                patron.DrownSorrows(queueToBar, queueToChairs, availableChairs, allPatrons, glassesOnTables);
+                patron.VisitPub(allPatrons, queueToBar, queueToChairs, availableChairs, glassesOnTables);
             }));
         }
 

@@ -20,12 +20,18 @@ namespace Lab6
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
-        public Bouncer(UIUpdater uiUpdater) 
+        ConcurrentDictionary<int, Patron> allPatrons;
+        Action<Patron> createPatronTask;
+
+        public Bouncer(UIUpdater uiUpdater,
+            ConcurrentDictionary<int, Patron> allPatrons,
+            Action<Patron> createPatronTask)
             : base (uiUpdater)
         {
+            this.allPatrons = allPatrons;
+            this.createPatronTask = createPatronTask;
         }
-        
-        public void Work(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
+        public void Work()
         {
             while (!LeftPub)
             {

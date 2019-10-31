@@ -13,7 +13,7 @@ namespace Lab6
         // TODO: Look at static members and classes, see what we can make more object-oriented.
         // TODO: Add a second window at the end of the sim that shows the user a message, then closes then program when the user clicks a button
 
-        public Pub pubSimulation;
+        private Pub pubSimulation;
         public UIUpdater uiUpdater;
         public Dictionary<TestState, Action> stateHandlers = new Dictionary<TestState, Action>();
         public Dictionary<string, int> simSpeed = new Dictionary<string, int>
@@ -96,7 +96,7 @@ namespace Lab6
             Bouncer.CouplesNight = CouplesNight;
             uiUpdater.UpdateGlassesLabel(pubSimulation.SumAmountGlasses);
             uiUpdater.UpdateChairLabel(pubSimulation.SumAmountChairs);
-            uiUpdater.UpdatePatronLabel(pubSimulation.allPatrons.Count());
+            uiUpdater.UpdatePatronLabel(0);
             uiUpdater.UpdateCountDownLabel(Time.SimulationTime);
         }
 
@@ -113,18 +113,21 @@ namespace Lab6
                 Agent.SimulationSpeed = 0.5;
                 Time.NewSimulationSpeed = 0.5;
                 Time.ChangePubHours();
+                return;
             }
             if (simSpeed[(string)selectedSpeed] == 4)
             {
                 Agent.SimulationSpeed = 0.25;
                 Time.NewSimulationSpeed = 0.25;
                 Time.ChangePubHours();
+                return;
             }
             if (simSpeed[(string)selectedSpeed] != 2 && simSpeed[(string)selectedSpeed] != 4)
             {
                 Agent.SimulationSpeed = 1;
                 Time.NewSimulationSpeed = 1;
                 Time.ChangePubHours();
+                return;
             }
         }
     }

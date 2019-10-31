@@ -24,8 +24,11 @@ namespace Lab6
             LogStatus($"{name} enters the pub", this);
         }
 
-        public void DrownSorrows(ConcurrentQueue<Patron> queueToBar, ConcurrentQueue<Patron> queueToChairs, ConcurrentQueue<Chair> availableChairs,
-            ConcurrentDictionary<int, Patron> allPatrons, ConcurrentBag<Glass> glassesOnTables)
+        public void VisitPub(ConcurrentDictionary<int, Patron> allPatrons,
+                ConcurrentQueue<Patron> queueToBar,
+                ConcurrentQueue<Patron> queueToChairs,
+                ConcurrentQueue<Chair> availableChairs,
+                ConcurrentBag<Glass> glassesOnTables)
         {
             while (!LeftPub)
             {
