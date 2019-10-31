@@ -6,7 +6,6 @@ namespace Lab6
 {
     public class Patron : Agent
     {
-        private UIUpdater uiUpdater;
         static public int DebugTimeToStay { get; set; }
         private int patronID;
         private string name;
@@ -17,12 +16,12 @@ namespace Lab6
         enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
         State currentState = default;
 
-        public Patron(string name, int ID, UIUpdater uiUpdater)
+        public Patron(string name, int ID, UIUpdater uiUpdater) 
+            : base(uiUpdater)
         {
             this.name = name;
-            this.uiUpdater = uiUpdater;
             patronID = ID;
-            LogStatus($"{name} enters the pub");
+            LogStatus($"{name} enters the pub", this);
         }
 
         public void DrownSorrows(ConcurrentQueue<Patron> queueToBar, ConcurrentQueue<Patron> queueToChairs, ConcurrentQueue<Chair> availableChairs,
@@ -68,7 +67,7 @@ namespace Lab6
 
         private void FindChair(ConcurrentQueue<Patron> queueToChair, ConcurrentQueue<Chair> availableChairs)
         {
-            LogStatus($"{name} looks for an available chair");
+            LogStatus($"{name} looks for an available chair", this);
             ActionDelay(4);
             queueToChair.Enqueue(this);
             while(availableChairs == null)
@@ -82,7 +81,7 @@ namespace Lab6
 
         private void DrinkBeer()
         {
-            LogStatus($"{name} sits down and drinks the beer");
+            LogStatus($"{name} sits down and drinks the beer", this);
             ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval) * DebugTimeToStay);
             carriedBeer.ContainsBeer = false;
         }
@@ -95,7 +94,7 @@ namespace Lab6
             chairUsed = null;
             glassesOnTables.Add(carriedBeer);
             carriedBeer = null;
-            LogStatus($"{name} leaves the pub");
+            LogStatus($"{name} leaves the pub", this);
             allPatrons.TryRemove(patronID, out _);
             uiUpdater.UpdatePatronLabel(allPatrons.Count());
             LeftPub = true;
@@ -114,11 +113,6 @@ namespace Lab6
         public void SetBeer(Glass beer)
         {
             carriedBeer = beer;
-        }
-
-        public override void LogStatus(string newStatus)
-        {
-            uiUpdater.LogPatronAction(newStatus);
         }
 
         private void SetState(ConcurrentQueue<Patron> queueToBar)

@@ -6,15 +6,14 @@ namespace Lab6
 {
     public class Waiter : Agent
     {
-        private UIUpdater uiUpdater;
         static public double DebugSpeed { get; set; }
         public ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
         enum State { AwaitingWork, GatheringGlasses, WashingDishes, LeavingPub };
         State currentState = default;
 
-        public Waiter(UIUpdater uiUpdater)
+        public Waiter(UIUpdater uiUpdater) 
+            : base( uiUpdater)
         {
-            this.uiUpdater = uiUpdater;
         }
 
         public void Work(ConcurrentBag<Glass> glassesToGather, ConcurrentQueue<Glass> glassesOnShelf, ConcurrentDictionary<int, Patron> allPatrons)
@@ -42,7 +41,7 @@ namespace Lab6
 
         private void WaitForWork(ConcurrentBag<Glass> glassesToGather)
         {
-            LogStatus("Waiting for work");
+            LogStatus("Waiting for work", this);
             while (glassesToGather.IsEmpty)
             {
                 Thread.Sleep(50);
@@ -51,8 +50,8 @@ namespace Lab6
 
         private void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
         {
-            LogStatus("Gathering Glasses");
-            ActionDelay(10);
+            LogStatus("Gathering Glasses", this);
+            ActionDelay((10 * DebugSpeed));
             while (!glassesToGather.IsEmpty)
             {
                 glassesToGather.TryTake(out Glass toGather);
@@ -62,8 +61,8 @@ namespace Lab6
 
         private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesInShelf)
         {
-            LogStatus("Washing and storing dishes");
-            ActionDelay(15);
+            LogStatus("Washing and storing dishes", this);
+            ActionDelay((15 * DebugSpeed));
             while (!glassesCarried.IsEmpty)
             {
                 glassesCarried.TryTake(out Glass toStore);
@@ -74,13 +73,8 @@ namespace Lab6
 
         private void LeavePub()
         {
-            LogStatus("Waiter Leaves the pub");
+            LogStatus("Waiter Leaves the pub", this);
             LeftPub = true;
-        }
-
-        public override void LogStatus(string newStatus)
-        {
-            uiUpdater.LogWaiterAction(newStatus);
         }
 
         private void SetState(ConcurrentBag<Glass> glassesToGather, ConcurrentDictionary<int, Patron> allPatrons)
