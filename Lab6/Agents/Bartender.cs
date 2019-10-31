@@ -8,8 +8,8 @@ namespace Lab6
     {
         private Glass carriedGlass = null;
         private Patron currentPatron = null;
-        enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
-        State currentState = default;
+        private enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
+        private State currentState = default;
 
         public Bartender(UIUpdater uiUpdater) 
             : base(uiUpdater)
