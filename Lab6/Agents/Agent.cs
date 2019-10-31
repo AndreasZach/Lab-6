@@ -33,6 +33,7 @@ namespace Lab6
                 return;
             }
         }
+
         protected void ActionDelay(double secondsDelay, Bouncer bouncer = null)
         {
             double ActionTimeDelay = Time.countdown - secondsDelay;
