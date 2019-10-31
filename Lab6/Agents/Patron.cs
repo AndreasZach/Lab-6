@@ -13,8 +13,8 @@ namespace Lab6
         private int maxInterval = 31;
         private Glass carriedBeer;
         private Chair chairUsed;
-        enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
-        State currentState = default;
+        private enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
+        private State currentState = default;
 
         public Patron(string name, int ID, UIUpdater uiUpdater) 
             : base(uiUpdater)

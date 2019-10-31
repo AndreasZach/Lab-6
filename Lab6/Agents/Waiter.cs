@@ -8,8 +8,8 @@ namespace Lab6
     {
         static public double DebugSpeed { get; set; }
         public ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
-        enum State { AwaitingWork, GatheringGlasses, WashingDishes, LeavingPub };
-        State currentState = default;
+        private enum State { AwaitingWork, GatheringGlasses, WashingDishes, LeavingPub };
+        private State currentState = default;
 
         public Waiter(UIUpdater uiUpdater) 
             : base( uiUpdater)

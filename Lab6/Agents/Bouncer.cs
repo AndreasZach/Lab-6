@@ -13,8 +13,8 @@ namespace Lab6
             "Alexander", "Andreé", "Andreea", "Daniel", "Elvis", "Emil", "Fredrik", "Johan", "John", "Jonas", "Karo",
             "Simon", "Sofia", "Tijana", "Toni", "Wilhelm"
         };
-        enum State { CheckingID, LeavingWork, HappyHour, CouplesNight };
-        State currentState = default;
+        private enum State { CheckingID, LeavingWork, HappyHour, CouplesNight };
+        private State currentState = default;
         private int minInterval = 3;
         private int maxInterval = 10;
         static public bool CouplesNight { get; set; }
