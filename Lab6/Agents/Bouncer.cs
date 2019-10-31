@@ -7,7 +7,6 @@ namespace Lab6
 {
     public class Bouncer : Agent
     {
-        private UIUpdater uiUpdater;
         private int patronID = 0;
         private List<string> patronNames = new List<string> {
             "Anders", "Andreas", "Pontus", "Charlotte", "Tommy", "Petter", "Khosro", "Luna", "Nicklas", "Nils", "Robin",
@@ -21,9 +20,9 @@ namespace Lab6
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
-        public Bouncer(UIUpdater uiUpdater)
+        public Bouncer(UIUpdater uiUpdater) 
+            : base (uiUpdater)
         {
-            this.uiUpdater = uiUpdater;
         }
         
         public void Work(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
@@ -87,13 +86,8 @@ namespace Lab6
 
         private void LeavePub()
         {
-            LogStatus("Bouncer leaves the pub");
+            LogStatus("Bouncer leaves the pub", this);
             LeftPub = true;
-        }
-
-        public override void LogStatus(string newStatus)
-        {
-            uiUpdater.LogPatronAction(newStatus);
         }
 
         private void SetState()

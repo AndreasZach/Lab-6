@@ -6,15 +6,14 @@ namespace Lab6
 {
     public class Bartender : Agent
     {
-        private UIUpdater uiUpdater;
         private Glass carriedGlass = null;
         private Patron currentPatron = null;
         enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
         State currentState = default;
 
-        public Bartender(UIUpdater uiUpdater)
+        public Bartender(UIUpdater uiUpdater) 
+            : base(uiUpdater)
         {
-            this.uiUpdater = uiUpdater;
         }
 
         public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
@@ -47,7 +46,7 @@ namespace Lab6
 
         private void WaitForPatron(ConcurrentQueue<Patron> queueToBar)
         {
-            LogStatus("Waiting for Patron");
+            LogStatus("Waiting for Patron", this);
             while (queueToBar.IsEmpty)
             {
                 Thread.Sleep(50);
@@ -56,7 +55,7 @@ namespace Lab6
 
         private void WaitForGlass(ConcurrentQueue<Glass> glassesInShelf)
         {
-            LogStatus("Waiting for a clean glass");
+            LogStatus("Waiting for a clean glass", this);
             while (glassesInShelf.IsEmpty)
             {
                 Thread.Sleep(50);
@@ -65,7 +64,7 @@ namespace Lab6
 
         private void FetchGlass(ConcurrentQueue<Glass> glassesInShelf)
         {
-            LogStatus("Fetching a glass");
+            LogStatus("Fetching a glass", this);
 
             ActionDelay(3);
             while (carriedGlass == null)
@@ -81,7 +80,7 @@ namespace Lab6
             {
                 queueToBar.TryDequeue(out currentPatron);
             }
-            LogStatus($"Pouring a beer for {currentPatron.GetName()}");
+            LogStatus($"Pouring a beer for {currentPatron.GetName()}", this);
             ActionDelay(3);
             carriedGlass.ContainsBeer = true;
             currentPatron.SetBeer(carriedGlass);
@@ -89,18 +88,13 @@ namespace Lab6
 
         private void CleanBarAndLeaveWork(ConcurrentDictionary<int, Patron> allPatrons)
         {
-            LogStatus("Bartender cleans the bar");
+            LogStatus("Bartender cleans the bar", this);
             while (!allPatrons.IsEmpty)
             {
                 Thread.Sleep(50);
             }
-            LogStatus("Bartender leaves the pub");
+            LogStatus("Bartender leaves the pub", this);
             LeftPub = true;
-        }
-
-        public override void LogStatus(string newStatus)
-        {
-            uiUpdater.LogBartenderAction(newStatus);
         }
 
         private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
