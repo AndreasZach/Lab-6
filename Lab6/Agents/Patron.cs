@@ -13,8 +13,8 @@ namespace Lab6
         private int maxInterval = 31;
         private Glass carriedBeer;
         private Chair chairUsed;
-        enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
-        State currentState = default;
+        private enum State { GoingToBar, AwaitingBeer, FindChair, DrinkingBeer, LeavingPub };
+        private State currentState = default;
 
         public Patron(string name, int ID, UIUpdater uiUpdater) 
             : base(uiUpdater)
@@ -24,8 +24,11 @@ namespace Lab6
             LogStatus($"{name} enters the pub", this);
         }
 
-        public void DrownSorrows(ConcurrentQueue<Patron> queueToBar, ConcurrentQueue<Patron> queueToChairs, ConcurrentQueue<Chair> availableChairs,
-            ConcurrentDictionary<int, Patron> allPatrons, ConcurrentBag<Glass> glassesOnTables)
+        public void VisitPub(ConcurrentDictionary<int, Patron> allPatrons,
+                ConcurrentQueue<Patron> queueToBar,
+                ConcurrentQueue<Patron> queueToChairs,
+                ConcurrentQueue<Chair> availableChairs,
+                ConcurrentBag<Glass> glassesOnTables)
         {
             while (!LeftPub)
             {

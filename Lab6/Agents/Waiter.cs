@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 
@@ -8,29 +9,38 @@ namespace Lab6
     {
         static public double DebugSpeed { get; set; }
         public ConcurrentBag<Glass> glassesCarried = new ConcurrentBag<Glass>();
-        enum State { AwaitingWork, GatheringGlasses, WashingDishes, LeavingPub };
-        State currentState = default;
+        private enum State { AwaitingWork, GatheringGlasses, WashingDishes, LeavingPub };
+        private State currentState = default;
+        ConcurrentQueue<Glass> glassesInShelf;
+        ConcurrentBag<Glass> glassesOnTables;
+        ConcurrentDictionary<int, Patron> allPatrons;
 
-        public Waiter(UIUpdater uiUpdater) 
-            : base( uiUpdater)
+        public Waiter(UIUpdater uiUpdater,
+            ConcurrentQueue<Glass> glassesInShelf,
+            ConcurrentBag<Glass> glassesOnTables,
+            ConcurrentDictionary<int, Patron> allPatrons)
+            : base(uiUpdater)
         {
+            this.glassesInShelf = glassesInShelf;
+            this.glassesOnTables = glassesOnTables;
+            this.allPatrons = allPatrons;
         }
 
-        public void Work(ConcurrentBag<Glass> glassesToGather, ConcurrentQueue<Glass> glassesOnShelf, ConcurrentDictionary<int, Patron> allPatrons)
+        public void Work()
         {
             while (!LeftPub)
             {
-                SetState(glassesToGather, allPatrons);
+                SetState();
                 switch (currentState)
                 {
                     case State.AwaitingWork:
-                        WaitForWork(glassesToGather);
+                        WaitForWork();
                         break;
                     case State.GatheringGlasses:
-                        GatherDirtyGlasses(glassesToGather);
+                        GatherDirtyGlasses();
                         break;
                     case State.WashingDishes:
-                        CleanAndStoreGlasses(glassesOnShelf);
+                        CleanAndStoreGlasses();
                         break;
                     case State.LeavingPub:
                         LeavePub();
@@ -39,27 +49,27 @@ namespace Lab6
             }
         }
 
-        private void WaitForWork(ConcurrentBag<Glass> glassesToGather)
+        private void WaitForWork()
         {
             LogStatus("Waiting for work", this);
-            while (glassesToGather.IsEmpty)
+            while (glassesOnTables.IsEmpty)
             {
                 Thread.Sleep(50);
             }
         }
 
-        private void GatherDirtyGlasses(ConcurrentBag<Glass> glassesToGather)
+        private void GatherDirtyGlasses()
         {
             LogStatus("Gathering Glasses", this);
             ActionDelay((10 * DebugSpeed));
-            while (!glassesToGather.IsEmpty)
+            while (!glassesOnTables.IsEmpty)
             {
-                glassesToGather.TryTake(out Glass toGather);
+                glassesOnTables.TryTake(out Glass toGather);
                 glassesCarried.Add(toGather);
             }
         }
 
-        private void CleanAndStoreGlasses(ConcurrentQueue<Glass> glassesInShelf)
+        private void CleanAndStoreGlasses()
         {
             LogStatus("Washing and storing dishes", this);
             ActionDelay((15 * DebugSpeed));
@@ -75,31 +85,32 @@ namespace Lab6
         {
             LogStatus("Waiter Leaves the pub", this);
             LeftPub = true;
+            
         }
 
-        private void SetState(ConcurrentBag<Glass> glassesToGather, ConcurrentDictionary<int, Patron> allPatrons)
+        private void SetState()
         {
-            if (currentState == State.GatheringGlasses)
-            {
-                currentState = State.WashingDishes;
-                return;
-            }
-            if (!glassesToGather.IsEmpty)
-            {
-                currentState = State.GatheringGlasses;
-                return;
-            }
-            if (!PubClosing && glassesToGather.IsEmpty)
-            {
-                currentState = State.AwaitingWork;
-                return;
-            }
             if (allPatrons.IsEmpty && PubClosing && !glassesCarried.IsEmpty)
             {
                 currentState = State.WashingDishes;
                 return;
             }
-            if (allPatrons.IsEmpty && PubClosing && glassesToGather.IsEmpty)
+            if (currentState == State.GatheringGlasses)
+            {
+                currentState = State.WashingDishes;
+                return;
+            }
+            if (!glassesOnTables.IsEmpty)
+            {
+                currentState = State.GatheringGlasses;
+                return;
+            }
+            if (!PubClosing && glassesOnTables.IsEmpty)
+            {
+                currentState = State.AwaitingWork;
+                return;
+            }
+            if (allPatrons.IsEmpty && PubClosing && glassesOnTables.IsEmpty)
             {
                 currentState = State.LeavingPub;
                 return;

@@ -8,43 +8,52 @@ namespace Lab6
     {
         private Glass carriedGlass = null;
         private Patron currentPatron = null;
-        enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
-        State currentState = default;
+        private enum State { AwaitingPatron, AwaitingGlass, PouringBeer, FetchingGlass, LeavingWork };
+        private State currentState = default;
+        ConcurrentQueue<Glass> glassesInShelf;
+        ConcurrentQueue<Patron> queueToBar;
+        ConcurrentDictionary<int, Patron> allPatrons;
 
-        public Bartender(UIUpdater uiUpdater) 
+        public Bartender(UIUpdater uiUpdater,
+            ConcurrentQueue<Glass> glassesInShelf,
+            ConcurrentQueue<Patron> queueToBar,
+            ConcurrentDictionary<int, Patron> allPatrons) 
             : base(uiUpdater)
         {
+            this.glassesInShelf = glassesInShelf;
+            this.queueToBar = queueToBar;
+            this.allPatrons = allPatrons;
         }
 
-        public void Work(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar, ConcurrentDictionary<int, Patron> allPatrons)
+        public void Work()
         {
             while (!LeftPub)
             {
-                SetState(glassesInShelf, queueToBar);
+                SetState();
                 switch (currentState)
                 {
                     case State.AwaitingPatron:
-                        WaitForPatron(queueToBar);
+                        WaitForPatron();
                         break;
                     case State.AwaitingGlass:
-                        WaitForGlass(glassesInShelf);
+                        WaitForGlass();
                         break;
                     case State.FetchingGlass:
-                        FetchGlass(glassesInShelf);
+                        FetchGlass();
                         break;
                     case State.PouringBeer:
-                        PourBeer(queueToBar);
+                        PourBeer();
                         carriedGlass = null;
                         currentPatron = null;
                         break;
                     case State.LeavingWork:
-                        CleanBarAndLeaveWork(allPatrons);
+                        CleanBarAndLeaveWork();
                         break;
                 }
             }
         }
 
-        private void WaitForPatron(ConcurrentQueue<Patron> queueToBar)
+        private void WaitForPatron()
         {
             LogStatus("Waiting for Patron", this);
             while (queueToBar.IsEmpty)
@@ -53,7 +62,7 @@ namespace Lab6
             }
         }
 
-        private void WaitForGlass(ConcurrentQueue<Glass> glassesInShelf)
+        private void WaitForGlass()
         {
             LogStatus("Waiting for a clean glass", this);
             while (glassesInShelf.IsEmpty)
@@ -62,7 +71,7 @@ namespace Lab6
             }
         }
 
-        private void FetchGlass(ConcurrentQueue<Glass> glassesInShelf)
+        private void FetchGlass()
         {
             LogStatus("Fetching a glass", this);
 
@@ -74,7 +83,7 @@ namespace Lab6
             uiUpdater.UpdateGlassesLabel(glassesInShelf.Count());
         }
 
-        private void PourBeer(ConcurrentQueue<Patron> queueToBar)
+        private void PourBeer()
         {
             while (currentPatron == null)
             {
@@ -86,9 +95,9 @@ namespace Lab6
             currentPatron.SetBeer(carriedGlass);
         }
 
-        private void CleanBarAndLeaveWork(ConcurrentDictionary<int, Patron> allPatrons)
+        private void CleanBarAndLeaveWork()
         {
-            LogStatus("Bartender cleans the bar", this);
+            LogStatus("Bartender tidys up the bar", this);
             while (!allPatrons.IsEmpty)
             {
                 Thread.Sleep(50);
@@ -97,7 +106,7 @@ namespace Lab6
             LeftPub = true;
         }
 
-        private void SetState(ConcurrentQueue<Glass> glassesInShelf, ConcurrentQueue<Patron> queueToBar)
+        private void SetState()
         {
             if (queueToBar.IsEmpty && PubClosing)
             {

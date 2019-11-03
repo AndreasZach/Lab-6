@@ -24,6 +24,7 @@ namespace Lab6
             window.SpeedComboBox.SelectionChanged += SpeedComboBox_SelectionChanged;
             window.SpeedComboBox.SelectedItem = simManager.simSpeed.Keys.First();
             window.Show();
+            
         }
 
         private void SpeedComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -38,10 +39,6 @@ namespace Lab6
             {
                 simManager.SetTestState(window.SimStateComboBox.SelectedItem);
                 window.OpenPubButton.IsEnabled = true;
-            }
-            else
-            {
-                window.OpenPubButton.IsEnabled = false;
             }
         }
 

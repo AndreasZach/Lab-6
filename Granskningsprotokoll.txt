@@ -1,12 +1,15 @@
-Tommy och Petter
+Granskning av grupp:​ Tommy och Petter
+URL till deras GitHub-Repo: ​https://github.com/atCordain/Lab6_Pub
+Datum: Torsdagen den 24 oktober
 
-En väl implementerad logfunktion till listboxes, en bra fungerande eventhandler
-ActionQueues för agenter är snyggt och välstrukturerat
-Unvikit att använda för många trådar i projekt
+Bra saker:
+● En väl implementerad logfunktion till listboxes, en bra fungerande eventhandler
+● ActionQueues för agenter är snyggt och välstrukturerat
+● Undvikit att använda för många trådar i projektet
 
-Dictionary med enum och delegate funktion istället för switchcase och events som används
-Inaktivera element i UI vid relevant tillfälle.
-Timer bör uppdateras oftare
-Det finns mycket kod i vissa klasser, kan vara svår att överblicka. Mer objektorienterat?
-
-Vid intresse: utveckla countdown och timestamps med DateTime.Now.
+Saker som kunnat förändras:
+● Dictionary med enum och delegate funktion istället för switchcase och events som används
+● Inaktivera element i UI vid relevant tillfälle.
+● Timer bör uppdateras oftare
+● Det finns mycket kod i vissa klasser, kan vara svår att överblicka. Merobjektorienterat?
+● utveckla countdown och timestamps med DateTime.Now.

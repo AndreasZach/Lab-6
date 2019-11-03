@@ -12,7 +12,7 @@ namespace Lab6
         private static double oldSimulationSpeed = 1;
         public static double countdown;
         private static string timeStamp;
-        
+        public static bool StopCountdown;
 
         public static double NewSimulationSpeed { get; set; }
         public static int SimulationTime { get; set; }
@@ -34,7 +34,7 @@ namespace Lab6
             Task.Run(() =>
             {
                 bool countdownSubZero = false;
-                while (true)
+                while (!StopCountdown)
                 {
                     countdown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
                     if (countdown >= 0)

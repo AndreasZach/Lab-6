@@ -13,19 +13,25 @@ namespace Lab6
             "Alexander", "Andreé", "Andreea", "Daniel", "Elvis", "Emil", "Fredrik", "Johan", "John", "Jonas", "Karo",
             "Simon", "Sofia", "Tijana", "Toni", "Wilhelm"
         };
-        enum State { CheckingID, LeavingWork, HappyHour, CouplesNight };
-        State currentState = default;
+        private enum State { CheckingID, LeavingWork, HappyHour, CouplesNight };
+        private State currentState = default;
         private int minInterval = 3;
         private int maxInterval = 10;
         static public bool CouplesNight { get; set; }
         static public bool HappyHour { get; set; }
         private bool completedHappyHourEvent = false;
-        public Bouncer(UIUpdater uiUpdater) 
+        ConcurrentDictionary<int, Patron> allPatrons;
+        Action<Patron> createPatronTask;
+
+        public Bouncer(UIUpdater uiUpdater,
+            ConcurrentDictionary<int, Patron> allPatrons,
+            Action<Patron> createPatronTask)
             : base (uiUpdater)
         {
+            this.allPatrons = allPatrons;
+            this.createPatronTask = createPatronTask;
         }
-        
-        public void Work(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
+        public void Work()
         {
             while (!LeftPub)
             {
