@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,11 +9,11 @@ namespace Lab6
         private UIUpdater uiUpdater;
         ConcurrentQueue<Glass> glassesInShelf =  new ConcurrentQueue<Glass>();
         ConcurrentQueue<Chair> availableChairs = new ConcurrentQueue<Chair>();
-        ConcurrentDictionary<int, Patron> allPatrons = new ConcurrentDictionary<int, Patron>();
         ConcurrentBag<Glass> glassesOnTables = new ConcurrentBag<Glass>();
         ConcurrentQueue<Patron> queueToBar = new ConcurrentQueue<Patron>();
         ConcurrentQueue<Patron> queueToChairs = new ConcurrentQueue<Patron>();
         ConcurrentBag<Task> patronTasks = new ConcurrentBag<Task>();
+        ConcurrentDictionary<int, Patron> allPatrons = new ConcurrentDictionary<int, Patron>();
         Bouncer bouncer;
         Bartender bartender;
         Waiter waiter;
@@ -33,7 +32,7 @@ namespace Lab6
         public void OpenPub()
         {
             GeneratePubItems();
-            Time.CountdownComplete += ClosePub;
+            uiUpdater.CountdownComplete += ClosePub;
             Task.Run(() => BouncerProcess()); 
             Task.Run(() => BartenderProcess());
             Task.Run(() => WaiterProcess());
@@ -50,7 +49,7 @@ namespace Lab6
                 {
                     if (bartender.LeftPub && waiter.LeftPub && bouncer.LeftPub)
                     {
-                        Time.StopCountdown = true;
+                        uiUpdater.StopPrintCountdown = true;
                         uiUpdater.ShowEndMessage();
                         break;
                     }

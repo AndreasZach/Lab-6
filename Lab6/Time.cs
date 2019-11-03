@@ -1,55 +1,36 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Lab6
 {
     public static class Time
     {
-        static public event Action CountdownComplete;
         private static DateTime openTime;
         private static DateTime closeTime = DateTime.Now;
         private static double oldSimulationSpeed = 1;
-        public static double countdown;
+        private static double countdown;
         private static string timeStamp;
-        public static bool StopCountdown;
+        private static double simulationSpeed;
 
-        public static double NewSimulationSpeed { get; set; }
         public static int SimulationTime { get; set; }
 
         public static void SetPubHours()
         {
             openTime = DateTime.Now;
-            closeTime = openTime.AddSeconds(SimulationTime * NewSimulationSpeed);
+            closeTime = openTime.AddSeconds(SimulationTime * simulationSpeed);
             countdown = SimulationTime;
         }
 
-        public static void ChangePubHours()
+        public static void SetNewSimulationSpeed(double newSpeed)
         {
-            closeTime = DateTime.Now.AddMilliseconds((closeTime.Subtract(DateTime.Now).TotalMilliseconds) / oldSimulationSpeed * NewSimulationSpeed);
-            oldSimulationSpeed = NewSimulationSpeed;
+            simulationSpeed = newSpeed;
+            closeTime = DateTime.Now.AddMilliseconds((closeTime.Subtract(DateTime.Now).TotalMilliseconds) / oldSimulationSpeed * simulationSpeed);
+            oldSimulationSpeed = simulationSpeed;
         }
-        public static void Countdown(MainWindow pubWindow)
+
+        public static double GetCountdown()
         {
-            Task.Run(() =>
-            {
-                bool countdownSubZero = false;
-                while (!StopCountdown)
-                {
-                    countdown = (closeTime.Subtract(DateTime.Now).TotalSeconds / NewSimulationSpeed);
-                    if (countdown >= 0)
-                    {
-                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"{(int)countdown} s");
-                    }
-                    if (!countdownSubZero && countdown < 0)
-                    {
-                        pubWindow.Dispatcher.Invoke(() => pubWindow.CountDownLabel.Content = $"Pub Closing");
-                        CountdownComplete();
-                        countdownSubZero = true;
-                    }
-                    Thread.Sleep(100);
-                }
-            });
+            countdown = (closeTime.Subtract(DateTime.Now).TotalSeconds / simulationSpeed);
+            return countdown;
         }
 
         public static string GetTimeStamp()

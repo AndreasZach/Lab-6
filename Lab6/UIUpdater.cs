@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace Lab6
@@ -6,15 +8,35 @@ namespace Lab6
     public class UIUpdater
     {
         private MainWindow window;
+        public event Action CountdownComplete;
+        public bool StopPrintCountdown;
 
         public void InitializeUpdater(MainWindow uiWindow)
         {
             window = uiWindow;
         }
 
-        public void StartTimer()
+        public void PrintCountdown()
         {
-            Time.Countdown(window);
+            Task.Run(() =>
+            {
+                bool countdownSubZero = false;
+                while (!StopPrintCountdown)
+                {
+                    double countdown = Time.GetCountdown();
+                    if (countdown >= 0)
+                    {
+                        window.Dispatcher.Invoke(() => window.CountDownLabel.Content = $"{(int)countdown} s");
+                    }
+                    if (!countdownSubZero && countdown < 0)
+                    {
+                        window.Dispatcher.Invoke(() => window.CountDownLabel.Content = $"Pub Closing");
+                        CountdownComplete();
+                        countdownSubZero = true;
+                    }
+                    Thread.Sleep(100);
+                }
+            });
         }
 
         public void UpdatePatronLabel(int currentPatrons)
@@ -66,7 +88,8 @@ namespace Lab6
 
         public void ShowEndMessage()
         {
-            MessageBox.Show("Pub is now closed,\nget out Pontus!", "Waiter:");
+            window.Dispatcher.Invoke(() => window.CountDownLabel.Content = "Pub Closed");
+            MessageBox.Show("Pub is now closed,\nplease leave the pub!", "Waiter:");
         }
     }
 }

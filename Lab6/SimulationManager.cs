@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Lab6
 {
@@ -45,7 +44,7 @@ namespace Lab6
         {
             Time.SetPubHours();
             pubSimulation.OpenPub();
-            uiUpdater.StartTimer();
+            uiUpdater.PrintCountdown();
         }
 
         public void PopulateTestCollection()
@@ -110,23 +109,17 @@ namespace Lab6
         {
             if (simSpeed[(string)selectedSpeed] == 2)
             {
-                Agent.SimulationSpeed = 0.5;
-                Time.NewSimulationSpeed = 0.5;
-                Time.ChangePubHours();
+                Time.SetNewSimulationSpeed(0.5);
                 return;
             }
             if (simSpeed[(string)selectedSpeed] == 4)
             {
-                Agent.SimulationSpeed = 0.25;
-                Time.NewSimulationSpeed = 0.25;
-                Time.ChangePubHours();
+                Time.SetNewSimulationSpeed(0.25);
                 return;
             }
             if (simSpeed[(string)selectedSpeed] != 2 && simSpeed[(string)selectedSpeed] != 4)
             {
-                Agent.SimulationSpeed = 1;
-                Time.NewSimulationSpeed = 1;
-                Time.ChangePubHours();
+                Time.SetNewSimulationSpeed(1);
                 return;
             }
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Lab6
 {
@@ -17,9 +18,9 @@ namespace Lab6
         private State currentState = default;
         private int minInterval = 3;
         private int maxInterval = 10;
-        static public bool CouplesNight { get; set; }
-        static public bool HappyHour { get; set; }
-        private bool completedHappyHourEvent = false;
+        public static bool CouplesNight { get; set; }
+        public static bool HappyHour { get; set; }
+        private bool completedHappyHourEvent;
         ConcurrentDictionary<int, Patron> allPatrons;
         Action<Patron> createPatronTask;
 
@@ -40,45 +41,46 @@ namespace Lab6
                 {
                     case State.CheckingID:
                         ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval), bouncer: this);
-                        GeneratePatron(allPatrons, createPatronTask);
+                        GeneratePatron();
                         break;
                     case State.LeavingWork:
                         LeavePub();
                         break;
                     case State.HappyHour:
-                        HappyHourGeneratePatrons(allPatrons, createPatronTask);
+                        HappyHourGeneratePatrons();
                         break;
                     case State.CouplesNight:
                         ActionDelay(RandomNumberGenerator.GetRandomDouble(minInterval, maxInterval), bouncer: this);
                         for (int i = 0; i < 2; i++)
                         {
-                            GeneratePatron(allPatrons, createPatronTask);
+                            GeneratePatron();
                         }
                         break;
                 }
             }
         }
 
-        private void HappyHourGeneratePatrons(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
+        private void HappyHourGeneratePatrons()
         {
-            double countdownUntilRegularEntry = Time.countdown - (RandomNumberGenerator.GetRandomDouble(minInterval, (maxInterval + 1)) * 2);
-            while (Time.countdown > countdownUntilRegularEntry)
+            double countdownUntilRegularEntry = Time.GetCountdown() - (RandomNumberGenerator.GetRandomDouble(minInterval, (maxInterval + 1)) * 2);
+            while (Time.GetCountdown() > countdownUntilRegularEntry)
             {
                 if (PubClosing)
-                    break;
-                if (!completedHappyHourEvent && Time.countdown <= 100)
+                    return;
+                if (!completedHappyHourEvent && Time.GetCountdown() <= 100)
                 {
                     completedHappyHourEvent = true;
                     for (int i = 0; i < 15; i++)
                     {
-                        GeneratePatron(allPatrons, createPatronTask);
+                        GeneratePatron();
                     }
                 }
+                Thread.Sleep(100);
             }
-            GeneratePatron(allPatrons, createPatronTask);
+            GeneratePatron();
         }
 
-        private void GeneratePatron(ConcurrentDictionary<int, Patron> allPatrons, Action<Patron> createPatronTask)
+        private void GeneratePatron()
         {
             if (PubClosing)
                 return;
