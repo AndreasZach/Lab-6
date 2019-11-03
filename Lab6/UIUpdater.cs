@@ -9,21 +9,21 @@ namespace Lab6
     {
         private MainWindow window;
         public event Action CountdownComplete;
-        public bool StopCountdown;
+        public bool StopPrintCountdown;
 
         public void InitializeUpdater(MainWindow uiWindow)
         {
             window = uiWindow;
         }
 
-        public void StartTimer()
+        public void PrintCountdown()
         {
             Task.Run(() =>
             {
                 bool countdownSubZero = false;
-                while (!StopCountdown)
+                while (!StopPrintCountdown)
                 {
-                    double countdown = Time.Countdown();
+                    double countdown = Time.GetCountdown();
                     if (countdown >= 0)
                     {
                         window.Dispatcher.Invoke(() => window.CountDownLabel.Content = $"{(int)countdown} s");

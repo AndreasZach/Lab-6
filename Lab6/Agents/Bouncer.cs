@@ -62,12 +62,12 @@ namespace Lab6
 
         private void HappyHourGeneratePatrons()
         {
-            double countdownUntilRegularEntry = Time.Countdown() - (RandomNumberGenerator.GetRandomDouble(minInterval, (maxInterval + 1)) * 2);
-            while (Time.Countdown() > countdownUntilRegularEntry)
+            double countdownUntilRegularEntry = Time.GetCountdown() - (RandomNumberGenerator.GetRandomDouble(minInterval, (maxInterval + 1)) * 2);
+            while (Time.GetCountdown() > countdownUntilRegularEntry)
             {
                 if (PubClosing)
                     return;
-                if (!completedHappyHourEvent && Time.Countdown() <= 100)
+                if (!completedHappyHourEvent && Time.GetCountdown() <= 100)
                 {
                     completedHappyHourEvent = true;
                     for (int i = 0; i < 15; i++)

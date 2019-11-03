@@ -35,8 +35,8 @@ namespace Lab6
 
         protected void ActionDelay(double secondsDelay, Bouncer bouncer = null)
         {
-            double ActionTimeDelay = Time.Countdown() - secondsDelay;
-            while (Time.Countdown() > ActionTimeDelay)
+            double ActionTimeDelay = Time.GetCountdown() - secondsDelay;
+            while (Time.GetCountdown() > ActionTimeDelay)
             {
                 if (bouncer != null && PubClosing)
                     return;

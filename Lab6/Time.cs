@@ -27,7 +27,7 @@ namespace Lab6
             oldSimulationSpeed = simulationSpeed;
         }
 
-        public static double Countdown()
+        public static double GetCountdown()
         {
             countdown = (closeTime.Subtract(DateTime.Now).TotalSeconds / simulationSpeed);
             return countdown;

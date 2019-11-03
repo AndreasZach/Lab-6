@@ -44,7 +44,7 @@ namespace Lab6
         {
             Time.SetPubHours();
             pubSimulation.OpenPub();
-            uiUpdater.StartTimer();
+            uiUpdater.PrintCountdown();
         }
 
         public void PopulateTestCollection()

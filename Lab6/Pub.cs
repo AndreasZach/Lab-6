@@ -49,7 +49,7 @@ namespace Lab6
                 {
                     if (bartender.LeftPub && waiter.LeftPub && bouncer.LeftPub)
                     {
-                        uiUpdater.StopCountdown = true;
+                        uiUpdater.StopPrintCountdown = true;
                         uiUpdater.ShowEndMessage();
                         break;
                     }
