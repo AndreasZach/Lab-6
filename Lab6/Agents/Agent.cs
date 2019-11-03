@@ -11,7 +11,6 @@ namespace Lab6
             this.uiUpdater = uiUpdater;
         }
 
-        static public double SimulationSpeed {get; set;}
         public bool PubClosing { get; set; } = false;
         public bool LeftPub { get; protected set; } = false;
 
@@ -36,8 +35,8 @@ namespace Lab6
 
         protected void ActionDelay(double secondsDelay, Bouncer bouncer = null)
         {
-            double ActionTimeDelay = Time.countdown - secondsDelay;
-            while (Time.countdown > ActionTimeDelay)
+            double ActionTimeDelay = Time.Countdown() - secondsDelay;
+            while (Time.Countdown() > ActionTimeDelay)
             {
                 if (bouncer != null && PubClosing)
                     return;
